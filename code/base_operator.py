@@ -13,16 +13,15 @@ class BaseOperator(metaclass=abc.ABCMeta):
 
 """Select a set of fit individuals from input population"""
 class SelectionOperator(BaseOperator):
-    def __init__(self, selection_factor, fitness_function):
-        self.selection_factor = selection_factor
-        self.fitness_function = fitness_function
+    def __init__(self, optimizer):
+        self.optimizer = optimizer
 
 """Produce a set of child states by crossover of input population"""
 class CrossoverOperator(BaseOperator):
-    def __init__(self, branching_factor):
-        self.branching_factor = branching_factor
+    def __init__(self, optimizer):
+        self.optimizer = optimizer
 
 """Mutate input population by changing some member values"""
 class MutationOperator(BaseOperator):
-    def __init__(self, mutation_factor):
-        self.mutation_factor = mutation_factor
+    def __init__(self, optimizer):
+        self.optimizer = optimizer

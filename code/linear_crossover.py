@@ -1,8 +1,7 @@
 from base_operator import CrossoverOperator
 
 class LinearCrossover(CrossoverOperator):
-    def run(self, population: list) -> list:
+    def run(self) -> list:
         """Produce a set of child states by crossover of input population"""
         # Your implementation here
-        
-        pass
+        return self.optimizer.population

@@ -1,7 +1,7 @@
 import fitness_function
 
-class StandardFitness(fitness_function.FitnessFunction):
-    def evaluate_fitness(state, modifiers: list) -> dict:
+class StandardFitness(fitness_function.FitnessFunction):    
+    def evaluate(self, state) -> dict:
         """
         Evaluate and return the fitness scores of a state
         -
@@ -16,7 +16,7 @@ class StandardFitness(fitness_function.FitnessFunction):
         * The fitness score pointed to by target key will be set to the result of the expression
         """
         output_scores = {}
-        for modifier in modifiers:
+        for modifier in self.optimizer.modifiers:
             args = []
             for arg in modifier[1:len(modifier)-2]:
                 args.append(state[arg])
