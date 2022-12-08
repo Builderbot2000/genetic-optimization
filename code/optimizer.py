@@ -81,4 +81,4 @@ class Optimizer:
                 self.terminate = self.termination_check.check(state)
 
             self.epochs += 1
-            #print(self.epochs)
+            # print(self.epochs)
