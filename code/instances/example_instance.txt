@@ -1,4 +1,4 @@
-name box
+id box_01
 shelf_price 5.00
 price_unit USD
 material_cost 1.00

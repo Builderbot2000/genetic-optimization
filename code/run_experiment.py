@@ -1,6 +1,6 @@
 import optimizer
 import argparse
-import most_fit_selection
+import most_profit_selection
 import linear_crossover
 import random_add_mutation
 import standard_fitness
@@ -9,7 +9,7 @@ import standard_termination
 DEFAULT_INSTANCE = "code/instances/example_instance.txt"
 DEFAULT_MODIFIERS = "code/modifiers/example_modifiers.txt"
 
-DEFAULT_SELECTION_OPERATOR = "mfs"      # mfs - most fit selection
+DEFAULT_SELECTION_OPERATOR = "mps"      # mps - most profit selection
 DEFAULT_CROSSOVER_OPERATOR = "lc"       # lc - linear crossover
 DEFAULT_MUTATION_OPERATOR = "ram"       # ram - random add mutation
 DEFAULT_FITNESS_FUNCTION = "sf"         # sf - standard fitness
@@ -74,8 +74,8 @@ if __name__ == '__main__':
         op.fitness_function = standard_fitness.StandardFitness(op)
     if args.termination_check == "st":
         op.termination_check = standard_termination.StandardTermination(op)
-    if args.selection_operator == "mfs":
-        op.selection_operator = most_fit_selection.MostFitSelection(op)
+    if args.selection_operator == "mps":
+        op.selection_operator = most_profit_selection.MostProfitSelection(op)
     op.selection_factor = args.selection_factor
     op.branching_factor = args.branching_factor
     op.mutation_factor = args.mutation_factor

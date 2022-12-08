@@ -1,4 +1,4 @@
-from most_fit_selection import *
+from most_profit_selection import *
 from linear_crossover import *
 from random_add_mutation import *
 from standard_fitness import *
