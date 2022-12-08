@@ -58,7 +58,7 @@ class Optimizer:
             modifier = item[0].split()
             modifier.append(item[1])
             # print(modifier)
-        self.modifiers.append(modifier)
+            self.modifiers.append(modifier)
 
     def run(self):
         """
@@ -81,4 +81,4 @@ class Optimizer:
                 self.terminate = self.termination_check.check(state)
 
             self.epochs += 1
-            # print(self.epochs)
+            #print(self.epochs)
