@@ -16,9 +16,7 @@ class StandardFitness(fitness_function.FitnessFunction):
         * The fitness score pointed to by target key will be set to the result of the expression
         """
         output_scores = {}
-        # print(self.optimizer.modifiers)
         for modifier in self.optimizer.modifiers:
-            # print("processing modifier " + str(modifier[0]))
             args = [None]*100
             i = 0 
             for arg in modifier[1:len(modifier)-1]:

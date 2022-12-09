@@ -6,8 +6,11 @@ import random_add_mutation
 import standard_fitness
 import standard_termination
 
+DEFAULT_EXPERIMENT_ID = 42
 DEFAULT_INSTANCE = "code/instances/example_instance.txt"
 DEFAULT_MODIFIERS = "code/modifiers/example_modifiers.txt"
+DEFAULT_OUTPUT = "code/output/output.txt"
+DEFAULT_LOG = "code/log/log.txt"
 
 DEFAULT_SELECTION_OPERATOR = "mps"      # mps - most profit selection
 DEFAULT_CROSSOVER_OPERATOR = "ac"       # lc - linear crossover
@@ -29,14 +32,17 @@ if __name__ == '__main__':
     
     """Run experiment here"""
     parser = argparse.ArgumentParser(description='Runs genetic optimizer for a set of product specifications')
+    parser.add_argument('--experiment_id', type=int, default=DEFAULT_EXPERIMENT_ID,
+                        help='The unique identifier for this experiment, defaults to ' + str(DEFAULT_EXPERIMENT_ID))
     parser.add_argument('--input', type=str, default=DEFAULT_INSTANCE,
                         help='The name of the input file, defaults to ' + str(DEFAULT_INSTANCE))
     parser.add_argument('--modifiers', type=str, default=DEFAULT_MODIFIERS,
                         help='The name of the modifiers file, defaults to ' + str(DEFAULT_MODIFIERS))
-    parser.add_argument('--output', type=str, default="outputs/output.txt",
-                        help='The filepath of the optimizer output, defaults to outputs/output.txt')
-    parser.add_argument('--log', type=str, default="log/log.txt",
-                        help='The filepath of the optimizer operations log, defaults to log/log.txt')
+    parser.add_argument('--output', type=str, default=DEFAULT_OUTPUT,
+                        help='The filepath of the optimizer output, defaults to ' + str(DEFAULT_OUTPUT))
+    parser.add_argument('--log', type=str, default=DEFAULT_LOG,
+                        help='The filepath of the optimizer operations log, defaults to '+ str(DEFAULT_LOG) + \
+                        ", if no log is needed, manually set this argument to \"\" ")
     parser.add_argument('--selection_operator', type=str, default=DEFAULT_SELECTION_OPERATOR,
                         help='The selection operator to use, defaults to ' + str(DEFAULT_SELECTION_OPERATOR))
     parser.add_argument('--crossover_operator', type=str, default=DEFAULT_CROSSOVER_OPERATOR,
@@ -71,9 +77,11 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     op = optimizer.Optimizer()
+    op.experiment_id = args.experiment_id
     op.input_path = args.input
     op.modifiers_path = args.modifiers
     op.output_path = args.output
+    op.log_path = args.log
     if args.crossover_operator == "ac":
         op.crossover_operator = arithmetic_crossover.ArithmeticCrossover(op)
     if args.mutation_operator == "ram":

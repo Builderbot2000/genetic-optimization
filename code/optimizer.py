@@ -9,6 +9,7 @@ import copy
 class Optimizer:
     
     """Data"""
+    experiment_id = 0                           # unique identifier for a particular experiment
     population: list                            # collection of states the optimizer currently holds
     population = []   
     # Note: Each state is a dictionary holding a collection of attribute/value pairs""" 
@@ -47,14 +48,17 @@ class Optimizer:
     def load(self):
         """Load population and modifiers from paths specified by inputs_path and modifiers_path"""
         state = {}
-        input_lines = open(self.input_path, 'r').readlines()
+        input_file = open(self.input_path, 'r')
+        input_lines = input_file.readlines()
         for line in input_lines:
             item = line.split()
             state[item[0]] = item[1]
         # print(state)
         self.population.append(state)
+        input_file.close()
 
-        modifier_lines = open(self.modifiers_path, 'r').readlines()
+        modifier_file = open(self.modifiers_path, 'r')
+        modifier_lines = modifier_file.readlines()
         for line in modifier_lines:
             item = line.split('@')
             item[0] = item[0].strip()
@@ -63,6 +67,7 @@ class Optimizer:
             modifier.append(item[1])
             # print(modifier)
             self.modifiers.append(modifier)
+        modifier_file.close()
     
     def run(self):
         """
@@ -83,24 +88,36 @@ class Optimizer:
         and self.epochs < self.maximum_epochs:
             """Selection Phase"""
             self.population = self.selection_operator.run()
-            # print("Post Selection:")
-            # print(len(self.population))
-            # print(self.population)
 
             """Crossover Phase"""
             self.population = self.crossover_operator.run()
-            # print("Post Crossover:")
-            # print(len(self.population))
-            # print(self.population)
 
             """Mutation Phase"""
             self.population = self.mutation_operator.run()
-            # print("Post Mutation:")
-            # print(len(self.population))
-            # print(self.population)
 
             """Check Phase"""
             for state in self.population:
                 self.terminate = self.termination_check.check(state)
             self.epochs += 1
-            # print(self.epochs)
+        
+        """Write to output"""
+        best_score = self.fitness_function.evaluate(self.current_best_fit)
+        output_file = open(self.output_path, 'a+')
+        output = "\n=== Experiment " + str(self.experiment_id) + " ===\n"
+        for attr in self.current_best_fit:
+            output += attr + ": " + str(self.current_best_fit[attr]) + "\n"
+        output += "--- scores ---\n"
+        for sattr in best_score:
+            output += sattr + ": " + str(best_score[sattr]) + "\n"
+        output += "=== END ===\n"
+        output_file.write(output)
+        output_file.close()
+
+        """Log Statistics"""
+        if self.log_path != "":
+            log_file = open(self.log_path, 'a+')
+            log = "\n=== Experiment " + str(self.experiment_id) + " ===\n"
+            log += "epochs ran: " + str(self.epochs) + "\n"
+            log += "=== END ===\n"
+            log_file.write(log)
+            log_file.close()
