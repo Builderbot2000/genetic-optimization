@@ -1,7 +1,7 @@
 import optimizer
 import argparse
 import most_profit_selection
-import linear_crossover
+import arithmetic_crossover
 import random_add_mutation
 import standard_fitness
 import standard_termination
@@ -10,16 +10,18 @@ DEFAULT_INSTANCE = "code/instances/example_instance.txt"
 DEFAULT_MODIFIERS = "code/modifiers/example_modifiers.txt"
 
 DEFAULT_SELECTION_OPERATOR = "mps"      # mps - most profit selection
-DEFAULT_CROSSOVER_OPERATOR = "lc"       # lc - linear crossover
+DEFAULT_CROSSOVER_OPERATOR = "ac"       # lc - linear crossover
 DEFAULT_MUTATION_OPERATOR = "ram"       # ram - random add mutation
 DEFAULT_FITNESS_FUNCTION = "sf"         # sf - standard fitness
 DEFAULT_TERMINATION_CHECK = "st"        # st - standard termination
 
 DEFAULT_SELECTION_FACTOR = 5
 DEFAULT_BRANCHING_FACTOR = 2
-DEFAULT_MUTATION_FACTOR = 5
+DEFAULT_ARITHMETIC_ALPHA = 0.8
+DEFAULT_MUTATION_FACTOR = 0.6
+DEFAULT_MUTATION_POTENCY = 0.4
 DEFAULT_MINIMUM_EPOCHS = 10
-DEFAULT_MAXIMUM_EPOCHS = 20
+DEFAULT_MAXIMUM_EPOCHS = 100
 
 """Input files should be put under instances/, modifiers files should be put under modifiers/"""
 
@@ -51,9 +53,15 @@ if __name__ == '__main__':
     parser.add_argument('--branching_factor', type=int, default=DEFAULT_BRANCHING_FACTOR,
                         help='How many child states are produced by two parents, defaults to ' + 
                         str(DEFAULT_BRANCHING_FACTOR))       
-    parser.add_argument('--mutation_factor', type=int, default=DEFAULT_MUTATION_FACTOR,
-                        help='How much of a state is mutated, defaults to ' + 
+    parser.add_argument('--arithmetic_alpha', type=int, default=DEFAULT_MUTATION_FACTOR,
+                        help='Value of the alpha parameter used in arithmetic crossover, defaults to ' + 
+                        str(DEFAULT_ARITHMETIC_ALPHA))  
+    parser.add_argument('--mutation_factor', type=float, default=DEFAULT_MUTATION_FACTOR,
+                        help='How likely a state attribute is mutated, defaults to ' + 
                         str(DEFAULT_MUTATION_FACTOR))  
+    parser.add_argument('--mutation_potency', type=float, default=DEFAULT_MUTATION_POTENCY,
+                        help='Maximum of how much of a state can be mutated , defaults to ' + 
+                        str(DEFAULT_MUTATION_POTENCY))  
     parser.add_argument('--minimum_epochs', type=int, default=DEFAULT_MINIMUM_EPOCHS,
                         help='Optimizer must run this many epochs before terminating, defaults to ' + 
                         str(DEFAULT_MINIMUM_EPOCHS))        
@@ -66,8 +74,8 @@ if __name__ == '__main__':
     op.input_path = args.input
     op.modifiers_path = args.modifiers
     op.output_path = args.output
-    if args.crossover_operator == "lc":
-        op.crossover_operator = linear_crossover.LinearCrossover(op)
+    if args.crossover_operator == "ac":
+        op.crossover_operator = arithmetic_crossover.ArithmeticCrossover(op)
     if args.mutation_operator == "ram":
         op.mutation_operator = random_add_mutation.RandomAddMutation(op)
     if args.fitness_function == "sf":
@@ -78,7 +86,9 @@ if __name__ == '__main__':
         op.selection_operator = most_profit_selection.MostProfitSelection(op)
     op.selection_factor = args.selection_factor
     op.branching_factor = args.branching_factor
+    op.arithmetic_alpha = args.arithmetic_alpha
     op.mutation_factor = args.mutation_factor
+    op.mutation_potency = args.mutation_potency
     op.minimum_epochs = args.minimum_epochs
     op.maximum_epochs = args.maximum_epochs
     op.load()
