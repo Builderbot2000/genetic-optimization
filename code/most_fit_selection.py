@@ -1,6 +1,6 @@
 from base_operator import SelectionOperator
 
-class MostProfitSelection(SelectionOperator):
+class MostFitSelection(SelectionOperator):
     def run(self) -> list:
         """
         Select a set of most fit individuals from input population, 
@@ -10,5 +10,5 @@ class MostProfitSelection(SelectionOperator):
         scores = {}
         for state in self.optimizer.population:
             scores[state['id']] = self.optimizer.fitness_function.evaluate(state)
-        self.optimizer.population.sort(key=lambda state: scores[state['id']]['profit'], reverse=True)
+        self.optimizer.population.sort(key=lambda state: scores[state['id']][self.optimizer.objective], reverse=True)
         return self.optimizer.population[:self.optimizer.selection_factor]

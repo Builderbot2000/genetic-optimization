@@ -1,6 +1,7 @@
 from base_operator import CrossoverOperator
+import random
 
-class ArithmeticCrossover(CrossoverOperator):
+class IntermediateCrossover(CrossoverOperator):
     def isnumber(self, num):
         try:
             float(num)
@@ -12,28 +13,21 @@ class ArithmeticCrossover(CrossoverOperator):
         """Produce a set of child states by crossover of input population"""
         configurables = self.optimizer.configurables
         offsprings = []
-        for stateA in self.optimizer.population:
-            for stateB in self.optimizer.population:
-                scoreA = self.optimizer.fitness_function.evaluate(stateA)
-                scoreB = self.optimizer.fitness_function.evaluate(stateB)
-                if scoreA[self.optimizer.objective] >= scoreB[self.optimizer.objective]:
-                    parentA = stateA
-                    parentB = stateB
-                else:
-                    parentA = stateB
-                    parentB = stateA
-                
+        for parentA in self.optimizer.population:
+            for parentB in self.optimizer.population:
                 offspringA = {}
                 offspringB = {}
                 alpha = self.optimizer.alpha
                 for attr in parentA:
                     if attr != 'id' and self.isnumber(str(parentA[attr])) and attr in configurables:
-                        offspringA[attr] = alpha * float(parentA[attr]) + (1-alpha) * float(parentB[attr])
+                        rand = random.uniform(0, 1)
+                        offspringA[attr] = float(parentA[attr]) + alpha * rand * (float(parentB[attr]) - float(parentA[attr]))
                     else:
                         offspringA[attr] = parentA[attr]
                 for attr in parentB:
                     if attr != 'id' and self.isnumber(str(parentB[attr])) and attr in configurables:
-                        offspringB[attr] = alpha * float(parentA[attr]) + (1-alpha) * float(parentB[attr])
+                        rand = random.uniform(0, 1)
+                        offspringB[attr] = float(parentA[attr]) + alpha * rand * (float(parentB[attr]) - float(parentA[attr]))
                     else:
                         offspringB[attr] = parentB[attr]
                 self.optimizer.state_id_counter += 1

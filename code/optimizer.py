@@ -1,5 +1,8 @@
-from most_profit_selection import *
+from most_fit_selection import *
 from arithmetic_crossover import *
+from single_arithmetic_crossover import *
+from heuristic_crossover import *
+from intermediate_crossover import *
 from random_add_mutation import *
 from standard_fitness import *
 from standard_termination import *
@@ -15,6 +18,7 @@ class Optimizer:
     # Note: Each state is a dictionary holding a collection of attribute/value pairs""" 
     modifiers: list                             # collection of modifiers the optimizer currently has
     modifiers = []
+    configurables = set()                       # set of parameters that should be configured by mutation
     state_id_counter = 0                        # current highest id held by any state
 
     """File paths"""
@@ -31,9 +35,10 @@ class Optimizer:
     termination_check = None                    # the function used to determine the terminating condition
     
     """Hyperparameters"""
+    objective = ""
     selection_factor = 0                        # how many states to select from top k most fitting states
     branching_factor = 0                        # how many child states are produced by two parents
-    arithmetic_alpha = 0                        # value of the alpha parameter used in arithmetic crossover
+    alpha = 0                                   # value of the alpha parameter used in crossover operators
     mutation_factor = 0                         # how likely a state attribute is mutated
     mutation_potency = 0                        # maximum of how much of a state can be mutated 
     minimum_epochs = 0                          # optimizer must run this many epochs before terminating
@@ -41,7 +46,7 @@ class Optimizer:
 
     """Statistics"""
     epochs = 0                                  # number of epochs this optimizer has run
-    total_child_states_expanded = 0             # number of total child states expanded by the crossover operator
+    total_states_generated = 0             # number of total child states expanded by the crossover operator
     current_best_fit = None                     # the current most fit state by fitness score
     terminate = False                           # whether the optimizer should terminate
     
@@ -74,6 +79,11 @@ class Optimizer:
         Run the genetic algorithm with the given parameters on current population and 
         output to path specified by output_path
         """
+
+        """Designate configurable parameters"""
+        for modifier in self.modifiers:
+            for arg in modifier[1:len(modifier)-1]:
+                self.configurables.add(arg)
         
         """Initialize Population"""
         self.population[0]['id'] = 0
@@ -83,6 +93,7 @@ class Optimizer:
             self.population.append(clone)
             self.state_id_counter = i
         self.population = self.mutation_operator.run()
+        self.total_states_generated += len(self.population)
 
         while (not self.terminate or self.epochs < self.minimum_epochs) \
         and self.epochs < self.maximum_epochs:
@@ -91,6 +102,7 @@ class Optimizer:
 
             """Crossover Phase"""
             self.population = self.crossover_operator.run()
+            self.total_states_generated += len(self.population)
 
             """Mutation Phase"""
             self.population = self.mutation_operator.run()
@@ -117,7 +129,18 @@ class Optimizer:
         if self.log_path != "":
             log_file = open(self.log_path, 'a+')
             log = "\n=== Experiment " + str(self.experiment_id) + " ===\n"
+            log += "optimization objective: " + str(self.objective) + "\n"
             log += "epochs ran: " + str(self.epochs) + "\n"
+            log += "total states generated: " + str(self.total_states_generated) + "\n"
+            log += "selection factor: " + str(self.selection_factor) + "\n"
+            log += "alpha: " + str(self.alpha) + "\n"
+            log += "mutation factor: " + str(self.mutation_factor) + "\n"
+            log += "mutation potency: " + str(self.mutation_potency) + "\n"
+            log += "minimum epochs: " + str(self.minimum_epochs) + "\n"
+            log += "maximum epochs: " + str(self.maximum_epochs) + "\n"
+            log += "selection operator: " + str(self.selection_operator) + "\n"
+            log += "crossover operator: " + str(self.crossover_operator) + "\n"
+            log += "mutation operator: " + str(self.mutation_operator) + "\n"
             log += "=== END ===\n"
             log_file.write(log)
             log_file.close()
