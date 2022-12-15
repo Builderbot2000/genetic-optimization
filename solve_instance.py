@@ -72,7 +72,7 @@ if __name__ == '__main__':
     op.load()
     instance, best_fit, num_states_generated,running_time = op.run()
 
-    """Write to output"""
+    """Log the results"""
     log_file = open(args.log, 'w')
     log = "--- Nonconfigurables  ---\n"
     for attr in instance:
