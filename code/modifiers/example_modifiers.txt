@@ -1,1 +1,0 @@
-profit shelf_price material_cost @ args[0] - args[1]

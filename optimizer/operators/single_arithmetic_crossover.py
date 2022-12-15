@@ -1,16 +1,10 @@
-from base_operator import CrossoverOperator
+from .BaseClasses.base_operator import CrossoverOperator
 
-class HeuristicCrossover(CrossoverOperator):
-    def isnumber(self, num):
-        try:
-            float(num)
-            return True
-        except ValueError:
-            return False
-
+class SingleArithmeticCrossover(CrossoverOperator):
     def run(self) -> list:
-        """Produce a set of child states by crossover of input population"""
-        configurables = self.optimizer.configurables
+        """
+        Produce a set of child states by crossover of input population
+        """
         offsprings = []
         for stateA in self.optimizer.population:
             for stateB in self.optimizer.population:
@@ -22,17 +16,22 @@ class HeuristicCrossover(CrossoverOperator):
                 else:
                     parentA = stateB
                     parentB = stateA
+                
                 offspringA = {}
                 offspringB = {}
                 alpha = self.optimizer.alpha
+                mutated = False
                 for attr in parentA:
-                    if attr != 'id' and self.isnumber(str(parentA[attr])) and attr in configurables:
-                        offspringA[attr] = float(parentB[attr]) + alpha * (float(parentA[attr]) - float(parentB[attr]))
+                    if attr != 'id' and mutated == False:
+                        offspringA[attr] = alpha * parentA[attr] + (1-alpha) * parentB[attr]
+                        mutated = True
                     else:
                         offspringA[attr] = parentA[attr]
+                mutated = False
                 for attr in parentB:
-                    if attr != 'id' and self.isnumber(str(parentB[attr])) and attr in configurables:
-                        offspringB[attr] = float(parentB[attr]) + alpha * (float(parentA[attr]) - float(parentB[attr]))
+                    if attr != 'id' and mutated == False:
+                        offspringB[attr] = alpha * parentA[attr] + (1-alpha) * parentB[attr]
+                        mutated = True
                     else:
                         offspringB[attr] = parentB[attr]
                 self.optimizer.state_id_counter += 1

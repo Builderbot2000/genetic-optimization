@@ -1,16 +1,10 @@
-from base_operator import CrossoverOperator
+from .BaseClasses.base_operator import CrossoverOperator
 
 class ArithmeticCrossover(CrossoverOperator):
-    def isnumber(self, num):
-        try:
-            float(num)
-            return True
-        except ValueError:
-            return False
-
     def run(self) -> list:
-        """Produce a set of child states by crossover of input population"""
-        configurables = self.optimizer.configurables
+        """
+        Produce a set of child states by crossover of input population
+        """
         offsprings = []
         for stateA in self.optimizer.population:
             for stateB in self.optimizer.population:
@@ -27,13 +21,13 @@ class ArithmeticCrossover(CrossoverOperator):
                 offspringB = {}
                 alpha = self.optimizer.alpha
                 for attr in parentA:
-                    if attr != 'id' and self.isnumber(str(parentA[attr])) and attr in configurables:
-                        offspringA[attr] = alpha * float(parentA[attr]) + (1-alpha) * float(parentB[attr])
+                    if attr != 'id':
+                        offspringA[attr] = alpha * parentA[attr] + (1-alpha) * parentB[attr]
                     else:
                         offspringA[attr] = parentA[attr]
                 for attr in parentB:
-                    if attr != 'id' and self.isnumber(str(parentB[attr])) and attr in configurables:
-                        offspringB[attr] = alpha * float(parentA[attr]) + (1-alpha) * float(parentB[attr])
+                    if attr != 'id':
+                        offspringB[attr] = alpha * parentA[attr] + (1-alpha) * parentB[attr]
                     else:
                         offspringB[attr] = parentB[attr]
                 self.optimizer.state_id_counter += 1
