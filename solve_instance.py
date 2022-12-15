@@ -115,7 +115,6 @@ if __name__ == '__main__':
     log += "selection operator: " + args.selection_operator + "\n"
     log += "crossover operator: " + args.crossover_operator + "\n"
     log += "mutation operator: " + args.mutation_operator + "\n"
-    log += "=== END ===\n"
 
     log_file.write(log)
     log_file.close()
