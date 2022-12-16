@@ -101,7 +101,7 @@ if __name__ == '__main__':
 
     """Rum optimizer on the given instance"""
     op = Optimizer(args)
-    best_fit, num_states_generated, running_time = op.run()
+    best_fit, num_epochs, num_states_generated, running_time = op.run()
 
     """Retrieve the results of best_fit""" 
     calculator = Calculator(args.instance)
@@ -118,19 +118,6 @@ if __name__ == '__main__':
     for attr in args.instance.keys():
         out += attr + ": " + str(args.instance[attr]) + '\n'
     
-    out += "\n--- Final Configurations ---\n"
-    for attr in best_fit.keys():
-        out += attr + ": " + str(best_fit[attr]) + '\n'
-    
-    out += "\n--- Final Results ---\n"
-    for attr in details.keys():
-        out += attr + ": " + str(details[attr]) + '\n'
-    out += "profit: " + str(profit) + '\n'
-
-    out += "\n--- Run Information ---\n"
-    out += "running_time: " + str(running_time) + '\n'
-    out += "num_states_generated: " + str(num_states_generated) + '\n'
-
     out += "\n--- Optimizer Information ---\n"
     out += "selection factor: " + str(args.selection_factor) + '\n'
     out += "alpha: " + str(args.alpha) + '\n'
@@ -141,6 +128,20 @@ if __name__ == '__main__':
     out += "selection_operator: " + SELECTION_OPERATOR[args.selection_operator] + '\n'
     out += "crossover_operator: " + CROSSOVER_OPERATOR[args.crossover_operator] + '\n'
     out += "mutation_operator: " + MUTATION_OPERATOR[args.mutation_operator] + '\n'
+
+    out += "\n--- Final Configurations ---\n"
+    for attr in best_fit.keys():
+        out += attr + ": " + str(best_fit[attr]) + '\n'
+    
+    out += "\n--- Final Results ---\n"
+    for attr in details.keys():
+        out += attr + ": " + str(details[attr]) + '\n'
+    out += "profit: " + str(profit) + '\n'
+
+    out += "\n--- Run Statistics ---\n"
+    out += "num_epochs: " + str(num_epochs) + '\n'
+    out += "running_time: " + str(running_time) + '\n'
+    out += "num_states_generated: " + str(num_states_generated) + '\n'
 
     output_file.write(out)
     output_file.close()

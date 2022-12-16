@@ -1,4 +1,4 @@
-import numpy as np
+from numpy import inf
 from math import floor
 from scipy.stats.mvn import mvnun
 
@@ -73,8 +73,8 @@ class Calculator:
         mean = [mean_unit_price, mean_product_quality]
         cov = [[unit_price_std**2, unit_price_std*product_quality_std],
                [unit_price_std*product_quality_std, product_quality_std**2]]
-        lower = [unit_price, -np.inf]
-        upper = [np.inf, product_quality]
+        lower = [unit_price, -inf]
+        upper = [inf, product_quality]
         market_captured, _ = mvnun(lower, upper, mean, cov)
         marketing_coverage = min(marketing_budget / full_coverage_marketing_cost, 1.0)
         market_demand = market_captured * marketing_coverage * market_size

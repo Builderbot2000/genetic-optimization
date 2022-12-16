@@ -126,4 +126,4 @@ class Optimizer:
             self.epochs += 1
         
         running_time = time() - start 
-        return self.current_best_fit, self.num_states_generated, running_time
+        return self.current_best_fit, self.epochs, self.num_states_generated, running_time

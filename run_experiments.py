@@ -1,7 +1,9 @@
 from run_optimizer import parse_instance, SELECTION_OPERATOR, \
                           CROSSOVER_OPERATOR, MUTATION_OPERATOR
 from optimizer.optimizer import Optimizer
+from numpy import inf
 import argparse
+import pandas
 import os
 
 if __name__ == '__main__':
@@ -11,9 +13,11 @@ if __name__ == '__main__':
       description="Runs genetic optimizer for a set of numerical configurations \
                    with different sets of hyperparameters"
     )
+
     parser.add_argument('--input', type=str, default=DEFAULT_INSTANCE,
                         help="The path of the input file, defaults to " +
                               str(DEFAULT_INSTANCE))
+
     args = parser.parse_args()
     args.instance = parse_instance(args.input)
 
@@ -52,13 +56,36 @@ if __name__ == '__main__':
     args.selection_factor = selection_factors[1]
     args.maximum_epochs = maximum_epochs_list[1]
 
+    hyperparameters = {}
+    hyperparameters['crossover_operator'] = None
+    hyperparameters['selection_factor'] = args.selection_factor
+    hyperparameters['mutation_factor'] = args.mutation_factor
+    hyperparameters['mutation_potency'] = args.mutation_potency
+    hyperparameters['maximum_epochs'] = args.maximum_epochs
+
+    ds = pandas.DataFrame(
+        columns=['crossover_operator', 'selection_factor', 'mutation_factor', \
+                 'mutation_potency', 'maximum_epochs', 'minimum_profit', \
+                 'maximum_profit', 'average_profit']
+    )
+
+    min_profit = inf
+    max_profit = -inf
+    sum_profit = 0
     for crossover_operator in crossover_operators:
         args.crossover_operator = crossover_operator
+        hyperparameters['crossover_operator'] = crossover_operator
+        for _ in range(100):
+            op = Optimizer(args)
+            best_fit, num_epochs, num_states_generated, running_time = op.run()
+
 
     for selection_factor in selection_factors:
         args.selection_factor = selection_factor
+        hyperparameters['selection_factor'] = selection_factor
 
     for maximum_epochs in maximum_epochs_list:
         args.maximum_epochs = maximum_epochs
+        hyperparameters['maximum_epochs'] = maximum_epochs
 
 
