@@ -14,7 +14,7 @@ class Calculator:
         """Configurables"""
         unit_price = state['unit_price']
         num_equipments = state['num_equipments']
-        equipment_grade = min(state['equipment_grade'], 1)
+        equipment_grade = state['equipment_grade']
         num_workers = state['num_workers']
         worker_wage = state['worker_wage']
         marketing_budget = state['marketing_budget']
@@ -32,10 +32,10 @@ class Calculator:
         num_equipments_per_unit = instance['num_equipments_per_unit']
         num_workers_per_unit = instance['num_workers_per_unit']
         cost_of_best_equipments = instance['cost_of_best_equipments']
-        wage_for_best_workers = instance['wage_for_best_workers']
+        wage_of_best_workers = instance['wage_of_best_workers']
         logistics_cost_per_unit = instance['logistics_cost_per_unit']
-        pay_for_best_contractors = instance['pay_for_best_contractors']
-        pay_for_best_facility_designers = instance['pay_for_best_facility_designers']
+        cost_of_best_contractors = instance['cost_of_best_contractors']
+        cost_of_best_facility_designers = instance['cost_of_best_facility_designers']
         full_coverage_marketing_cost = instance['full_coverage_marketing_cost']
         max_product_improvement = instance['max_product_improvement']
         RaD_cost_for_max_improvement = instance['RaD_cost_for_max_improvement']
@@ -45,25 +45,25 @@ class Calculator:
         waste_disposal_cost_per_kg = instance['waste_disposal_cost_per_kg']
 
         """Intermediate values"""
-        workforce_skill_level = min(worker_wage / wage_for_best_workers, 1)
+        workforce_skill_level = min(worker_wage / wage_of_best_workers, 1)
         product_improvement = max(min(RaD_spending / RaD_cost_for_max_improvement, 1) * 
                                   max_product_improvement, 1)
-        product_quality = product_improvement * equipment_grade * workforce_skill_level
-        facility_efficiency = min(1, (design_spending / pay_for_best_facility_designers) * \
-                                     (construction_spending / pay_for_best_contractors))
+        product_quality = product_improvement * min(equipment_grade, 1) * workforce_skill_level
+        facility_efficiency = min(1, (design_spending / cost_of_best_facility_designers) * \
+                                     (construction_spending / cost_of_best_contractors))
         
-        """How many products will be produced"""
-        quantity_produced = facility_efficiency * min(num_equipments / num_equipments_per_unit,
+        """Number of products to be manufactured"""
+        product_quantity = facility_efficiency * min(num_equipments / num_equipments_per_unit,
                                                       num_workers / num_workers_per_unit) 
         
         """Calculate costs"""
         equipment_cost = num_equipments * equipment_grade * cost_of_best_equipments
         facility_investment = design_spending + construction_spending + equipment_cost 
         workforce_cost = worker_wage * num_workers
-        logistics_cost = logistics_cost_per_unit * quantity_produced
-        manufacture_cost = cost_of_resources_per_unit * quantity_produced 
+        logistics_cost = logistics_cost_per_unit * product_quantity
+        manufacture_cost = cost_of_resources_per_unit * product_quantity 
         operating_cost = manufacture_cost + workforce_cost + logistics_cost
-        environmental_cost = quantity_produced * \
+        environmental_cost = product_quantity * \
                            (carbon_emmision_per_unit * emmision_cost_per_kg + \
                             industrial_waste_per_unit * waste_disposal_cost_per_kg)
         
@@ -78,7 +78,7 @@ class Calculator:
         market_demand = market_captured * marketing_coverage * market_size
 
         """Calculate profit"""
-        revenue = unit_price * min(quantity_produced, market_demand)
+        revenue = unit_price * min(product_quantity, market_demand)
         cost = facility_investment + RaD_spending + operating_cost + \
                marketing_budget + environmental_cost
         profit = revenue - cost
@@ -91,7 +91,7 @@ class Calculator:
             details['product_improvement'] = product_improvement 
             details['product_quality'] = product_quality 
             details['facility_efficiency'] = facility_efficiency 
-            details['quantity_produced'] = quantity_produced 
+            details['product_quantity'] = product_quantity 
             details['equipment_cost'] = equipment_cost 
             details['facility_investment'] = facility_investment 
             details['workforce_cost'] = workforce_cost 
@@ -101,4 +101,6 @@ class Calculator:
             details['environmental_cost'] = environmental_cost
             details['market_captured'] = market_captured
             details['marketing_coverage'] = marketing_coverage
+            details['market_demand'] = market_demand
+            details['revenue'] = revenue
             return details, profit

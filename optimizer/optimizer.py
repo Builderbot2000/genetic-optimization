@@ -10,7 +10,6 @@ from .calculator import *
 from time import time 
 from copy import deepcopy
 from numpy import inf
-from random import uniform
 
 class Optimizer:
     
@@ -48,7 +47,6 @@ class Optimizer:
 
     def __init__(self, args):
         self.input_path = args.input
-        self.log_path = args.log
 
         if args.fitness_function == "sf":
             self.fitness_function = StandardFitness(self)
@@ -93,15 +91,15 @@ class Optimizer:
         """Initilize configurable parameters"""
         state = {}
         state['id'] = 0
-        state['equipment_grade'] = 1
-        state['unit_price'] = instance['mean_unit_price']
+        state['unit_price'] = instance['mean_unit_price'] + instance['unit_price_std']
         state['num_equipments'] = instance['market_size'] * instance['num_equipments_per_unit']
+        state['equipment_grade'] = 1
         state['num_workers'] = instance['market_size'] * instance['num_workers_per_unit']
-        state['worker_wage'] = instance['wage_for_best_workers']
+        state['worker_wage'] = instance['wage_of_best_workers']
         state['marketing_budget'] = instance['full_coverage_marketing_cost']
         state['RaD_spending'] = instance['RaD_cost_for_max_improvement']
-        state['design_spending'] = instance['pay_for_best_facility_designers']
-        state['construction_spending'] = instance['pay_for_best_contractors']
+        state['design_spending'] = instance['cost_of_best_facility_designers']
+        state['construction_spending'] = instance['cost_of_best_contractors']
 
         self.population.append(state)
         input_file.close()
@@ -136,6 +134,8 @@ class Optimizer:
             """Mutation Phase"""
             self.population = self.mutation_operator.run()
 
+            profit = self.fitness_function.evaluate(self.current_best_fit)
+            print(self.current_best_score, profit)
             self.epochs += 1
         
         running_time = time() - start

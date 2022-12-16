@@ -2,12 +2,15 @@ from optimizer.optimizer import Optimizer
 from optimizer.calculator import Calculator
 import argparse
 
+SELECTION_OPERATOR = {'mfs': 'most_fit_selection'}
+CROSSOVER_OPERATOR = {'ic':'intermediate_crossover', 'hc':'heuristic_crossover',
+                       'ac':'arithmetic_crossover', 'sac':'single_arithmetic_crossover'}
+MUTATION_OPERATOR = {'ram':'random_add_mutation'}
+
 def run_optimizer(args):
     op = Optimizer(args)
     op.load()
-    instance, best_fit, run_info = op.run()
-    (num_states_generated, running_time) = run_info
-
+    return op.run()
 
 if __name__ == '__main__':
     """Path to input file specifying the instance"""
@@ -94,4 +97,41 @@ if __name__ == '__main__':
                               defaults to " + str(DEFAULT_MAXIMUM_EPOCHS))         
 
     args = parser.parse_args()
-    run_optimizer(args)
+    instance, best_fit, run_info = run_optimizer(args)
+
+    calculator = Calculator(instance)
+    details, profit = calculator.run(best_fit, more_details=True)
+
+    output_file_path = 'outputs/' + args.input.split('/')[-1].split('.')[-2] + '.out'
+    output_file = open(output_file_path, 'w')
+
+    out = "--- Instance Specifications ---" + '\n'
+    for attr in instance.keys():
+        out += attr + ": " + str(instance[attr]) + '\n'
+    
+    out += "\n--- Final Configurations ---\n"
+    for attr in best_fit.keys():
+        out += attr + ": " + str(best_fit[attr]) + '\n'
+    
+    out += "\n--- Final Results ---\n"
+    for attr in details.keys():
+        out += attr + ": " + str(details[attr]) + '\n'
+    out += "profit: " + str(profit) + '\n'
+
+    out += "\n--- Run Info ---\n"
+    out += "running_time: " + str(run_info[0]) + '\n'
+    out += "num_states_generated: " + str(run_info[1]) + '\n'
+
+    out += "\n--- Optimizer Info ---\n"
+    out += "selection factor: " + str(args.selection_factor) + '\n'
+    out += "alpha: " + str(args.alpha) + '\n'
+    out += "mutation_factor: " + str(args.mutation_factor) + '\n'
+    out += "mutation_potency: " + str(args.mutation_potency) + '\n'
+    out += "minimum_epochs: " + str(args.minimum_epochs) + '\n'
+    out += "maximum_epochs: " + str(args.maximum_epochs) + '\n'
+    out += "selection_operator: " + SELECTION_OPERATOR[args.selection_operator] + '\n'
+    out += "crossover_operator: " + CROSSOVER_OPERATOR[args.crossover_operator] + '\n'
+    out += "mutation_operator: " + MUTATION_OPERATOR[args.mutation_operator] + '\n'
+
+    output_file.write(out)
+    output_file.close()
