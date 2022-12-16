@@ -4,7 +4,7 @@ import argparse
 
 if __name__ == '__main__':
     """Input files should be put under instances/"""
-    DEFAULT_INSTANCE = "instances/original.txt"
+    DEFAULT_INSTANCE = "instances/wafer.instance"
     DEFAULT_LOGFILE = "results/log.txt"
 
     DEFAULT_SELECTION_OPERATOR = "mfs"      # mps - most fit selection
@@ -76,33 +76,33 @@ if __name__ == '__main__':
     log_file = open(args.log, 'w')
     log = "--- Nonconfigurables  ---\n"
     for attr in instance:
-        log += attr + ": " + str(round(instance[attr], 4)) + '\n'
+        log += attr + ": " + str(round(instance[attr], 2)) + '\n'
 
     log += "\n--- Final Configurables --\n"
     for attr in best_fit:
-        log += attr + ": " + str(round(best_fit[attr], 4)) + '\n'
+        log += attr + ": " + str(round(best_fit[attr], 2)) + '\n'
 
     log += "\n--- Final results ---\n"
     calculator = Calculator(instance)
     (workforce_skill_level, product_improvement, product_quality, marketing_coverage, \
      percentage_satisfied), (quantity_produced, revenue, equipment_cost, worker_cost, \
-                             environmental_tax), profit = calculator.run(best_fit, details=True)
-    log += "workforce_skill_level: " + str(round(workforce_skill_level, 4)) + '\n'
-    log += "product_improvement: " + str(round(product_improvement, 4)) + '\n'
-    log += "product_quality: " + str(round(product_quality, 4)) + '\n'
-    log += "market_coverage: " + str(round(marketing_coverage, 4)) + '\n'
-    log += "percantage_satisfied_with_price_quality: " + \
-           str(round(percentage_satisfied, 4)) + '\n'
-    log += "quantity_produced: " + str(round(quantity_produced, 4)) + '\n'
-    log += "revenue: " + str(round(revenue, 4)) + '\n'
-    log += "equipment_cost: " + str(round(equipment_cost, 4)) + '\n'
-    log += "worker_cost: " + str(round(worker_cost, 4)) + '\n'
-    log += "environmental_tax: " + str(round(environmental_tax, 4)) + '\n'
-    log += "profit: " + str(round(profit, 4)) + '\n'
+                             environmental_cost), profit = calculator.run(best_fit, details=True)
+    log += "workforce_skill_level: " + str(round(workforce_skill_level, 2)) + '\n'
+    log += "product_improvement: " + str(round(product_improvement, 2)) + '\n'
+    log += "product_quality: " + str(round(product_quality, 2)) + '\n'
+    log += "market_coverage: " + str(round(marketing_coverage, 2)) + '\n'
+    log += "percentage_satisfied_with_price_quality: " + \
+           str(round(percentage_satisfied, 2)) + '\n'
+    log += "quantity_produced: " + str(round(quantity_produced, 2)) + '\n'
+    log += "revenue: " + str(round(revenue, 2)) + '\n'
+    log += "equipment_cost: " + str(round(equipment_cost, 2)) + '\n'
+    log += "worker_cost: " + str(round(worker_cost, 2)) + '\n'
+    log += "environmental_cost: " + str(round(environmental_cost, 2)) + '\n'
+    log += "profit: " + str(round(profit, 2)) + '\n'
 
     log += "\n--- Execution Details ---\n"
     log += "epochs ran: " + str(args.maximum_epochs) + "\n"
-    log += "running_time: " + str(round(running_time, 4)) + '\n'
+    log += "running_time: " + str(round(running_time, 2)) + '\n'
     log += "total states generated: " + str(num_states_generated) + "\n"
 
     log += "\n--- Optimizer Info ---\n"

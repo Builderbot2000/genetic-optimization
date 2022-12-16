@@ -91,7 +91,7 @@ class Optimizer:
         """Randomly configurable parameters"""
         state = {}
         state['id'] = 0
-        # state['shelf_price'] = uniform(0, self.instance['mean_shelf_price'] * 2)
+        # state['unit_price'] = uniform(0, self.instance['mean_unit_price'] * 2)
         # state['num_equipments'] = uniform(0, self.instance['market_size'] /
         #                                    self.instance['num_equipments_per_unit'])
         # state['equipment_grade'] = uniform(0, 1)
@@ -102,7 +102,7 @@ class Optimizer:
         # state['RaD_spending'] = uniform(0, self.instance['RaD_cost_for_max_improvement'])
         # state['design_spending'] = uniform(0, self.instance['pay_for_best_facility_designers'])
         # state['construction_spending'] = uniform(0, self.instance['pay_for_best_contractors'])
-        state['shelf_price'] = self.instance['mean_shelf_price']
+        state['unit_price'] = self.instance['mean_unit_price']
         state['num_equipments'] = self.instance['market_size'] * \
                                   self.instance['num_equipments_per_unit']
         state['equipment_grade'] = 1
