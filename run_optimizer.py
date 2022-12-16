@@ -101,7 +101,7 @@ if __name__ == '__main__':
 
     """Rum optimizer on the given instance"""
     op = Optimizer(args)
-    best_fit, num_epochs, num_states_generated, running_time = op.run()
+    best_fit, num_epochs_run, num_states_generated, running_time = op.run()
 
     """Retrieve the results of best_fit""" 
     calculator = Calculator(args.instance)
@@ -118,7 +118,7 @@ if __name__ == '__main__':
     for attr in args.instance.keys():
         out += attr + ": " + str(args.instance[attr]) + '\n'
     
-    out += "\n--- Optimizer Information ---\n"
+    out += "\n--- Optimizer Details ---\n"
     out += "selection factor: " + str(args.selection_factor) + '\n'
     out += "alpha: " + str(args.alpha) + '\n'
     out += "mutation_factor: " + str(args.mutation_factor) + '\n'
@@ -138,10 +138,10 @@ if __name__ == '__main__':
         out += attr + ": " + str(details[attr]) + '\n'
     out += "profit: " + str(profit) + '\n'
 
-    out += "\n--- Run Statistics ---\n"
-    out += "num_epochs: " + str(num_epochs) + '\n'
-    out += "running_time: " + str(running_time) + '\n'
+    out += "\n--- Statistics ---\n"
+    out += "num_epochs_run: " + str(num_epochs_run) + '\n'
     out += "num_states_generated: " + str(num_states_generated) + '\n'
+    out += "running_time: " + str(running_time) + '\n'
 
     output_file.write(out)
     output_file.close()
