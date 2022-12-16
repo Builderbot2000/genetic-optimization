@@ -90,7 +90,7 @@ class Optimizer:
         self.instance = deepcopy(instance)
         self.calculator = Calculator(self.instance)
 
-        """Randomly configurable parameters"""
+        """Initilize configurable parameters"""
         state = {}
         state['id'] = 0
         state['equipment_grade'] = 1
