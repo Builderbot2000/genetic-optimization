@@ -83,37 +83,25 @@ class Optimizer:
         """Load problem specifications from input_path"""
         input_file = open(self.input_path, 'r')
         input_lines = input_file.readlines()
+        instance = {}
         for line in input_lines:
             item = line.split()
-            self.instance[item[0]] = float(item[1])
+            instance[item[0]] = float(item[1])
+        self.instance = deepcopy(instance)
         self.calculator = Calculator(self.instance)
 
         """Randomly configurable parameters"""
         state = {}
         state['id'] = 0
-        # state['unit_price'] = uniform(0, self.instance['mean_unit_price'] * 2)
-        # state['num_equipments'] = uniform(0, self.instance['market_size'] /
-        #                                    self.instance['num_equipments_per_unit'])
-        # state['equipment_grade'] = uniform(0, 1)
-        # state['num_workers'] = uniform(0, self.instance['market_size'] /
-        #                                   self.instance['num_workers_per_unit'])
-        # state['worker_wage'] = uniform(0, self.instance['wage_for_best_workers'])
-        # state['marketing_budget'] = uniform(0, self.instance['full_coverage_marketing_cost'])
-        # state['RaD_spending'] = uniform(0, self.instance['RaD_cost_for_max_improvement'])
-        # state['design_spending'] = uniform(0, self.instance['pay_for_best_facility_designers'])
-        # state['construction_spending'] = uniform(0, self.instance['pay_for_best_contractors'])
-        state['unit_price'] = self.instance['mean_unit_price']
-        state['num_equipments'] = self.instance['market_size'] * \
-                                  self.instance['num_equipments_per_unit']
         state['equipment_grade'] = 1
-        state['num_workers'] = self.instance['market_size'] * \
-                               self.instance['num_workers_per_unit']
-        state['worker_wage'] = self.instance['wage_for_best_workers']
-        state['marketing_budget'] = self.instance['full_coverage_marketing_cost']
-        state['RaD_spending'] = self.instance['RaD_cost_for_max_improvement']
-        state['design_spending'] = self.instance['pay_for_best_facility_designers']
-        state['construction_spending'] = self.instance['pay_for_best_contractors']
-        print(state)
+        state['unit_price'] = instance['mean_unit_price']
+        state['num_equipments'] = instance['market_size'] * instance['num_equipments_per_unit']
+        state['num_workers'] = instance['market_size'] * instance['num_workers_per_unit']
+        state['worker_wage'] = instance['wage_for_best_workers']
+        state['marketing_budget'] = instance['full_coverage_marketing_cost']
+        state['RaD_spending'] = instance['RaD_cost_for_max_improvement']
+        state['design_spending'] = instance['pay_for_best_facility_designers']
+        state['construction_spending'] = instance['pay_for_best_contractors']
 
         self.population.append(state)
         input_file.close()
@@ -151,6 +139,7 @@ class Optimizer:
             self.epochs += 1
         
         running_time = time() - start
-        return self.instance, self.current_best_fit, self.num_states_generated, running_time 
+        run_info = (self.num_states_generated, running_time)
+        return self.instance, self.current_best_fit, run_info
 
         

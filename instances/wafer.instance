@@ -1,7 +1,7 @@
 market_size 20000000
 mean_unit_price 20000
-unit_price_std 4000
 mean_product_quality 1.6
+unit_price_std 4000
 product_quality_std 0.2
 cost_of_resources_per_unit 2000
 num_equipments_per_unit 0.00005
