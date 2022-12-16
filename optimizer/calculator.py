@@ -1,4 +1,5 @@
 import numpy as np
+from math import floor
 from scipy.stats.mvn import mvnun
 
 class Calculator:
@@ -45,16 +46,17 @@ class Calculator:
         waste_disposal_cost_per_kg = instance['waste_disposal_cost_per_kg']
 
         """Intermediate values"""
-        workforce_skill_level = min(worker_wage / wage_of_best_workers, 1)
-        product_improvement = max(min(RaD_spending / RaD_cost_for_max_improvement, 1) * 
-                                  max_product_improvement, 1)
-        product_quality = product_improvement * min(equipment_grade, 1) * workforce_skill_level
-        facility_efficiency = min(1, (design_spending / cost_of_best_facility_designers) * \
-                                     (construction_spending / cost_of_best_contractors))
+        workforce_skill_level = min(worker_wage / wage_of_best_workers, 1.0)
+        product_improvement = max(min(RaD_spending / RaD_cost_for_max_improvement, 1.0) * 
+                                  max_product_improvement, 1.0)
+        product_quality = product_improvement * min(equipment_grade, 1.0) * workforce_skill_level
+        facility_efficiency = min(1.0, (design_spending / cost_of_best_facility_designers) * \
+                                       (construction_spending / cost_of_best_contractors))
         
         """Number of products to be manufactured"""
-        product_quantity = facility_efficiency * min(num_equipments / num_equipments_per_unit,
-                                                      num_workers / num_workers_per_unit) 
+        product_quantity = floor(facility_efficiency * \
+                                 min(num_equipments / num_equipments_per_unit,
+                                     num_workers / num_workers_per_unit))
         
         """Calculate costs"""
         equipment_cost = num_equipments * equipment_grade * cost_of_best_equipments
@@ -74,7 +76,7 @@ class Calculator:
         lower = [unit_price, -np.inf]
         upper = [np.inf, product_quality]
         market_captured, _ = mvnun(lower, upper, mean, cov)
-        marketing_coverage = min(marketing_budget / full_coverage_marketing_cost, 1)
+        marketing_coverage = min(marketing_budget / full_coverage_marketing_cost, 1.0)
         market_demand = market_captured * marketing_coverage * market_size
 
         """Calculate profit"""

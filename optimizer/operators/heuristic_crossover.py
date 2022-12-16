@@ -2,9 +2,8 @@ from .BaseClasses.base_operator import CrossoverOperator
 
 class HeuristicCrossover(CrossoverOperator):
     def run(self) -> list:
-        """
-        Produce a set of child states by crossover of input population
-        """
+        """Produce a set of child states by crossover of input population"""
+        
         offsprings = []
         for stateA in self.optimizer.population:
             for stateB in self.optimizer.population:

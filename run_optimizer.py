@@ -1,20 +1,26 @@
 from optimizer.optimizer import Optimizer
 from optimizer.calculator import Calculator
 import argparse
+import os
 
 SELECTION_OPERATOR = {'mfs': 'most_fit_selection'}
 CROSSOVER_OPERATOR = {'ic':'intermediate_crossover', 'hc':'heuristic_crossover',
                        'ac':'arithmetic_crossover', 'sac':'single_arithmetic_crossover'}
 MUTATION_OPERATOR = {'ram':'random_add_mutation'}
 
-def run_optimizer(args):
-    op = Optimizer(args)
-    op.load()
-    return op.run()
+def parse_instance(input_path):
+    input_file = open(input_path, 'r')
+    input_lines = input_file.readlines()
+
+    instance = {}
+    for line in input_lines:
+        item = line.split()
+        instance[item[0]] = float(item[1])
+    return instance
 
 if __name__ == '__main__':
     """Path to input file specifying the instance"""
-    DEFAULT_INSTANCE = "instances/wafer.instance"
+    DEFAULT_INSTANCE = "instances/wafer.log"
 
     """
     Available values for each hyperparameter:
@@ -32,14 +38,12 @@ if __name__ == '__main__':
     DEFAULT_TERMINATION_CHECK = 'st'
 
     DEFAULT_SELECTION_FACTOR = 50
-    DEFAULT_BRANCHING_FACTOR = 2
     DEFAULT_ALPHA = 0.5
     DEFAULT_MUTATION_FACTOR = 1.0
     DEFAULT_MUTATION_POTENCY = 0.4
     DEFAULT_MINIMUM_EPOCHS = 10
     DEFAULT_MAXIMUM_EPOCHS = 100
 
-    """Rum optimizer on the given instance"""
     parser = argparse.ArgumentParser(
       description="Runs genetic optimizer for a set of numerical configurations"
     )
@@ -72,10 +76,6 @@ if __name__ == '__main__':
                         help="How many states to select from top k most fitting states, \
                               defaults to " + str(DEFAULT_SELECTION_FACTOR))     
 
-    parser.add_argument('--branching_factor', type=int, default=DEFAULT_BRANCHING_FACTOR,
-                        help="How many child states are produced by two parents, defaults to " +
-                              str(DEFAULT_BRANCHING_FACTOR))
-
     parser.add_argument('--alpha', type=int, default=DEFAULT_MUTATION_FACTOR,
                         help="Value of the alpha parameter used in crossover operators, \
                               defaults to " + str(DEFAULT_ALPHA))  
@@ -97,17 +97,26 @@ if __name__ == '__main__':
                               defaults to " + str(DEFAULT_MAXIMUM_EPOCHS))         
 
     args = parser.parse_args()
-    instance, best_fit, run_info = run_optimizer(args)
+    args.instance = parse_instance(args.input)
 
-    calculator = Calculator(instance)
+    """Rum optimizer on the given instance"""
+    op = Optimizer(args)
+    best_fit, num_states_generated, running_time = op.run()
+
+    """Retrieve the results of best_fit""" 
+    calculator = Calculator(args.instance)
     details, profit = calculator.run(best_fit, more_details=True)
 
-    output_file_path = 'outputs/' + args.input.split('/')[-1].split('.')[-2] + '.out'
+    """Write results to output/[instance_name].out.log"""
+    if not os.path.exists('output/'):
+        os.makedirs('output/')
+
+    output_file_path = 'output/' + args.input.split('/')[-1].split('.')[-2] + '.out.log'
     output_file = open(output_file_path, 'w')
 
     out = "--- Instance Specifications ---" + '\n'
-    for attr in instance.keys():
-        out += attr + ": " + str(instance[attr]) + '\n'
+    for attr in args.instance.keys():
+        out += attr + ": " + str(args.instance[attr]) + '\n'
     
     out += "\n--- Final Configurations ---\n"
     for attr in best_fit.keys():
@@ -118,11 +127,11 @@ if __name__ == '__main__':
         out += attr + ": " + str(details[attr]) + '\n'
     out += "profit: " + str(profit) + '\n'
 
-    out += "\n--- Run Info ---\n"
-    out += "running_time: " + str(run_info[0]) + '\n'
-    out += "num_states_generated: " + str(run_info[1]) + '\n'
+    out += "\n--- Run Information ---\n"
+    out += "running_time: " + str(running_time) + '\n'
+    out += "num_states_generated: " + str(num_states_generated) + '\n'
 
-    out += "\n--- Optimizer Info ---\n"
+    out += "\n--- Optimizer Information ---\n"
     out += "selection factor: " + str(args.selection_factor) + '\n'
     out += "alpha: " + str(args.alpha) + '\n'
     out += "mutation_factor: " + str(args.mutation_factor) + '\n'

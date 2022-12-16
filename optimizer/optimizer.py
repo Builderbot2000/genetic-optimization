@@ -19,9 +19,6 @@ class Optimizer:
     state_id_counter = 0                       # current highest id held by any state
     calculator = None                          # used to estimate the profit
 
-    """File paths"""
-    input_path = ""                            # the name of the inputs file
-
     """Operators"""
     selection_operator = None                  # the selection operator used by the optimizer
     crossover_operator = None                  # the crossover operator used by the optimizer
@@ -31,7 +28,6 @@ class Optimizer:
     
     """Hyperparameters"""
     selection_factor = 0                       # number of states selected for the next generation
-    branching_factor = 0                       # number of child states produced by two parents
     alpha = 0                                  # value of alpha in crossover operators
     mutation_factor = 0                        # mutation probability
     mutation_potency = 0                       # maximum of how much of a state can be mutated 
@@ -46,7 +42,7 @@ class Optimizer:
     terminate = False                          # whether the optimizer should terminate
 
     def __init__(self, args):
-        self.input_path = args.input
+        self.__load(args.instance)
 
         if args.fitness_function == "sf":
             self.fitness_function = StandardFitness(self)
@@ -66,29 +62,18 @@ class Optimizer:
             self.termination_check = StandardTermination(self)
 
         self.selection_factor = args.selection_factor
-        self.branching_factor = args.branching_factor
         self.alpha = args.alpha
         self.mutation_factor = args.mutation_factor
         self.mutation_potency = args.mutation_potency
         self.minimum_epochs = args.minimum_epochs
         self.maximum_epochs = args.maximum_epochs
-    
-    def load(self):
-        """
-        Load problem specifications and initilize configurable parameters
-        """
 
-        """Load problem specifications from input_path"""
-        input_file = open(self.input_path, 'r')
-        input_lines = input_file.readlines()
-        instance = {}
-        for line in input_lines:
-            item = line.split()
-            instance[item[0]] = float(item[1])
+    def __load(self, instance):
+        """Load problem specifications and initilize configurable parameters"""
+        
         self.instance = deepcopy(instance)
         self.calculator = Calculator(self.instance)
 
-        """Initilize configurable parameters"""
         state = {}
         state['id'] = 0
         state['unit_price'] = instance['mean_unit_price'] + instance['unit_price_std']
@@ -102,7 +87,6 @@ class Optimizer:
         state['construction_spending'] = instance['cost_of_best_contractors']
 
         self.population.append(state)
-        input_file.close()
 
     def run(self):
         """
@@ -134,12 +118,12 @@ class Optimizer:
             """Mutation Phase"""
             self.population = self.mutation_operator.run()
 
-            profit = self.fitness_function.evaluate(self.current_best_fit)
-            print(self.current_best_score, profit)
+            """Normalization"""
+            for i in range(len(self.population)):
+                equipment_grade = self.population[i]['equipment_grade']
+                self.population[i]['equipment_grade'] = min(equipment_grade, 1.0)
+
             self.epochs += 1
         
-        running_time = time() - start
-        run_info = (self.num_states_generated, running_time)
-        return self.instance, self.current_best_fit, run_info
-
-        
+        running_time = time() - start 
+        return self.current_best_fit, self.num_states_generated, running_time

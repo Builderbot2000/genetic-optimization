@@ -3,9 +3,8 @@ import random
 
 class IntermediateCrossover(CrossoverOperator):
     def run(self) -> list:
-        """
-        Produce a set of child states by crossover of input population
-        """
+        """Produce a set of child states by crossover of input population"""
+        
         offsprings = []
         for parentA in self.optimizer.population:
             for parentB in self.optimizer.population:
