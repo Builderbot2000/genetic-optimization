@@ -106,7 +106,7 @@ if __name__ == '__main__':
 
     """Rum optimizer on the given instance"""
     op = Optimizer(args)
-    best_fit, _, num_epochs_run, num_states_generated, running_time = op.run()
+    best_fit, num_epochs_run, num_states_generated, running_time, _ = op.run()
 
     """Retrieve the results of best_fit""" 
     calculator = Calculator(args.instance)

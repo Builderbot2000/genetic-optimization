@@ -105,14 +105,13 @@ class Optimizer:
         self.population = self.mutation_operator.run()
         self.num_states_generated += len(self.population)
 
-        best_fits = []
+        more_detailed_results = []
         start = time()
 
         while (not self.terminate or self.epochs < self.minimum_epochs) \
-        and self.epochs < self.maximum_epochs:
+                and self.epochs < self.maximum_epochs:
             """Selection Phase"""
             self.population = self.selection_operator.run()
-            self.termination_check.check(self.population[0])
 
             """Crossover Phase"""
             self.population = self.crossover_operator.run()
@@ -127,9 +126,15 @@ class Optimizer:
                 self.population[i]['equipment_grade'] = min(equipment_grade, 1.0)
             
             self.epochs += 1
+            running_time = time() - start
+
             if self.epochs % 100 == 0:
-                best_fits.append(deepcopy(self.current_best_fit))
+                more_detailed_results.append(
+                    {'current_best_fit': deepcopy(self.current_best_fit),
+                     'num_states_generated': self.num_states_generated,
+                     'num_epochs': self.epochs,
+                     'running_time': running_time}
+                )
         
-        running_time = time() - start 
-        return self.current_best_fit, best_fits, self.epochs, \
-               self.num_states_generated, running_time
+        return self.current_best_fit, self.epochs, self.num_states_generated, \
+               running_time, more_detailed_results
