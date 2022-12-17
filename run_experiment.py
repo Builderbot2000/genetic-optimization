@@ -45,9 +45,9 @@ if __name__ == '__main__':
     args.maximum_epochs = 1000
 
     df = pandas.DataFrame(
-        columns=['crossover_operator', 'selection_factor', 'mutation_factor', 'mutation_potency', \
-                 'maximum_epochs', 'num_states_generated', 'running_time', 'minimum_profit', \
-                 'maximum_profit', 'average_profit']
+        columns=['experiment_id', 'crossover_operator', 'selection_factor', 'branching_factor',\
+                 'mutation_factor', 'mutation_potency', 'maximum_epochs', 'minimum_profit', \
+                 'maximum_profit', 'average_profit', 'num_states_generated', 'running_time']
     )
 
     num_data_points_per_run = int(args.maximum_epochs / 100)
@@ -100,10 +100,10 @@ if __name__ == '__main__':
                         avg_profit = sum_profit[j] / num_runs_per_configuration
                         avg_running_time = total_running_time[j] / num_runs_per_configuration
 
-                        df.loc[experiment_id] = [args.crossover_operator, args.selection_factor, \
-                            args.mutation_factor, args.mutation_potency, num_epochs_run[j], \
-                            num_states_generated[j], avg_running_time, min_profit[j], \
-                            max_profit[j], avg_profit]
+                        df.loc[experiment_id] = [experiment_id, args.crossover_operator, \
+                            args.selection_factor, args.branching_factor, args.mutation_factor, \
+                            args.mutation_potency, num_epochs_run[j], min_profit[j], max_profit[j], \
+                            avg_profit, num_states_generated[j], avg_running_time]
                     
                         experiment_id += 1
 
