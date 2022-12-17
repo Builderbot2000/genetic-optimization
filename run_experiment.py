@@ -30,7 +30,7 @@ if __name__ == '__main__':
     output_file_path = 'output/' + args.input.split('/')[-1].split('.')[-2] + '.expt.csv'
         
     """Run optimizer with different hyperparameters and write the results to output_file"""
-    crossover_operators = ['ic', 'ac', 'sac']
+    crossover_operators = ['ac', 'sac', 'ic']
     selection_factors = [15, 35, 85]
     branching_factors = [68, 12, 2]
     mutation_factors = [0.5, 1.0]
@@ -107,4 +107,4 @@ if __name__ == '__main__':
                     
                         experiment_id += 1
 
-    df.to_csv(output_file_path, index=False)
+        df.to_csv(output_file_path, index=False)

@@ -12,7 +12,7 @@ class SingleArithmeticCrossover(CrossoverOperator):
                 stateB = self.optimizer.population[j]
                 scoreA = self.optimizer.fitness_function.evaluate(stateA)
                 scoreB = self.optimizer.fitness_function.evaluate(stateB)
-                if scoreA[self.optimizer.objective] >= scoreB[self.optimizer.objective]:
+                if scoreA >= scoreB:
                     parentA = stateA
                     parentB = stateB
                 else:
