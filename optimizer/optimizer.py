@@ -96,7 +96,8 @@ class Optimizer:
         """
         
         """Initialize Population"""
-        for i in range(1, self.selection_factor * 4):
+        n = self.selection_factor
+        for i in range(1, n*(n-1)*self.branching_factor):
             clone = deepcopy(self.population[0])
             clone['id'] = i
             self.population.append(clone)
