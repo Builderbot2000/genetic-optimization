@@ -22,19 +22,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     args.instance = parse_instance(args.input)
 
-    selection_operator = 'mfs'
-    crossover_operators = ['ic','hc','ac','sac']
-    mutation_operator = 'ram'
-    fitness_function = 'sf'
-    termination_check = 'st'
-
-    selection_factors = [20, 50, 100]
-    alpha = 0.5
-    mutation_factors = [0.2, 0.5, 1.0]
-    mutation_potencies = [0.4, 0.6, 0.8]
-    minimum_epochs = 10
-    maximum_epochs_list = [100, 1000, 10000]
-
     """Write instance specifications to experiments/[instance_name].expt.log"""
     if not os.path.exists('output/'):
         os.makedirs('output/')
@@ -46,16 +33,16 @@ if __name__ == '__main__':
         out += attr + ": " + str(args.instance[attr]) + '\n'
     
     """Run optimizer with different sets of hyperparameters and save the results"""
-    args.selection_operator = selection_operator
-    args.mutation_operator = mutation_operator
-    args.fitness_function = fitness_function
-    args.termination_check = termination_check
-    args.alpha = alpha
-    args.mutation_factor = mutation_factors[1]
-    args.mutation_potency = mutation_potencies[0]
-    args.minimum_epochs = minimum_epochs
-    args.selection_factor = selection_factors[1]
-    args.maximum_epochs = maximum_epochs_list[1]
+    args.selection_operator = 'mfs'
+    args.mutation_operator = 'ram'
+    args.fitness_function = 'sf'
+    args.termination_check = 'st'
+    args.selection_factor = 50
+    args.alpha = 0.5
+    args.mutation_factor = 0.5
+    args.mutation_potency = 0.4
+    args.minimum_epochs = 20
+    args.maximum_epochs = 1000
 
     hyperparameters = {}
     hyperparameters['crossover_operator'] = None
@@ -81,7 +68,8 @@ if __name__ == '__main__':
 
     experiment_id = 0
 
-    for crossover_operator in crossover_operators:
+    """Experiment 1: Find the best """
+    for crossover_operator in ['ic', 'hc', 'ac', 'sac']:
         out += "\n########## Experiment " + str(experiment_id) + " ##########\n"
         args.crossover_operator = crossover_operator
         hyperparameters['crossover_operator'] = crossover_operator
@@ -101,12 +89,14 @@ if __name__ == '__main__':
             if profit < min_profit:
                 min_profit = profit
 
+        """Add row containing 100-run statistics to dataframe"""
         avg_profit = sum_profit / 100
         avg_running_time = total_running_time / 100
         df.loc[experiment_id] = [args.crossover_operator, args.selection_factor, \
             args.mutation_factor, args.mutation_potency, args.maximum_epochs, \
             min_profit, max_profit, avg_profit]
         
+        """Write 100-run statistics to output_file"""
         out += "\n--- Statistics ---\n"
         out += "num_epochs_run: " + str(num_epochs_run) + '\n'
         out += "num_states_generated: " + str(num_states_generated) + '\n'
@@ -127,5 +117,4 @@ if __name__ == '__main__':
     for maximum_epochs in maximum_epochs_list:
         args.maximum_epochs = maximum_epochs
         hyperparameters['maximum_epochs'] = maximum_epochs
-
 

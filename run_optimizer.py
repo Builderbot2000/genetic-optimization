@@ -5,7 +5,7 @@ import os
 
 SELECTION_OPERATOR = {'mfs': 'most_fit_selection'}
 CROSSOVER_OPERATOR = {'ic':'intermediate_crossover', 'hc':'heuristic_crossover',
-                       'ac':'arithmetic_crossover', 'sac':'single_arithmetic_crossover'}
+                      'ac':'arithmetic_crossover', 'sac':'single_arithmetic_crossover'}
 MUTATION_OPERATOR = {'ram':'random_add_mutation'}
 
 def parse_instance(input_path):
