@@ -37,7 +37,8 @@ if __name__ == '__main__':
     DEFAULT_FITNESS_FUNCTION = 'sf'
     DEFAULT_TERMINATION_CHECK = 'st'
 
-    DEFAULT_SELECTION_FACTOR = 50
+    DEFAULT_SELECTION_FACTOR = 20
+    DEFAULT_BRANCHING_FACTOR = 2
     DEFAULT_ALPHA = 0.5
     DEFAULT_MUTATION_FACTOR = 1.0
     DEFAULT_MUTATION_POTENCY = 0.4
@@ -57,8 +58,8 @@ if __name__ == '__main__':
                               str(DEFAULT_SELECTION_OPERATOR))
 
     parser.add_argument('--crossover_operator', type=str, default=DEFAULT_CROSSOVER_OPERATOR,
-                        help="The crossover operator to use, should be within interval [0, 1], \
-                              defaults to " + str(DEFAULT_CROSSOVER_OPERATOR))
+                        help='The crossover operator to use, defaults to ' + 
+                              str(DEFAULT_CROSSOVER_OPERATOR))
 
     parser.add_argument('--mutation_operator', type=str, default=DEFAULT_MUTATION_OPERATOR,
                         help="The mutation operator to use, defaults to " +
@@ -76,7 +77,11 @@ if __name__ == '__main__':
                         help="How many states to select from top k most fitting states, \
                               defaults to " + str(DEFAULT_SELECTION_FACTOR))     
 
-    parser.add_argument('--alpha', type=int, default=DEFAULT_MUTATION_FACTOR,
+    parser.add_argument('--branching_factor', type=int, default=DEFAULT_BRANCHING_FACTOR,
+                        help='How many child states are produced by two parents, defaults to ' + 
+                        str(DEFAULT_BRANCHING_FACTOR))  
+
+    parser.add_argument('--alpha', type=int, default=DEFAULT_ALPHA,
                         help="Value of the alpha parameter used in crossover operators, \
                               defaults to " + str(DEFAULT_ALPHA))  
 
@@ -101,7 +106,7 @@ if __name__ == '__main__':
 
     """Rum optimizer on the given instance"""
     op = Optimizer(args)
-    best_fit, num_epochs_run, num_states_generated, running_time = op.run()
+    best_fit, _, num_epochs_run, num_states_generated, running_time = op.run()
 
     """Retrieve the results of best_fit""" 
     calculator = Calculator(args.instance)

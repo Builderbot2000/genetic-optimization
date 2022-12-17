@@ -27,12 +27,13 @@ class Optimizer:
     termination_check = None                   # the function determining when to terminate
     
     """Hyperparameters"""
-    selection_factor = 0                       # number of states selected for the next generation
-    alpha = 0                                  # value of alpha in crossover operators
-    mutation_factor = 0                        # mutation probability
-    mutation_potency = 0                       # maximum of how much of a state can be mutated 
-    minimum_epochs = 0                         # minimum number of epochs the optimizer can run
-    maximum_epochs = 0                         # maximum number of epochs the optimizer can run
+    selection_factor = None                    # number of states selected for the next generation
+    branching_factor = None                    # number of states produced by two parents
+    alpha = None                               # value of alpha in crossover operators
+    mutation_factor = None                     # mutation probability
+    mutation_potency = None                    # maximum of how much of a state can be mutated 
+    minimum_epochs = None                      # minimum number of epochs the optimizer can run
+    maximum_epochs = None                      # maximum number of epochs the optimizer can run
 
     """Statistics"""
     epochs = 0                                 # number of epochs this optimizer has run
@@ -62,6 +63,7 @@ class Optimizer:
             self.termination_check = StandardTermination(self)
 
         self.selection_factor = args.selection_factor
+        self.branching_factor = args.branching_factor
         self.alpha = args.alpha
         self.mutation_factor = args.mutation_factor
         self.mutation_potency = args.mutation_potency
@@ -95,7 +97,7 @@ class Optimizer:
         """
         
         """Initialize Population"""
-        for i in range(1, self.selection_factor * 4):
+        for i in range(1, self.selection_factor):
             clone = deepcopy(self.population[0])
             clone['id'] = i
             self.population.append(clone)
@@ -103,6 +105,7 @@ class Optimizer:
         self.population = self.mutation_operator.run()
         self.num_states_generated += len(self.population)
 
+        best_fits = []
         start = time()
 
         while (not self.terminate or self.epochs < self.minimum_epochs) \
@@ -122,8 +125,11 @@ class Optimizer:
             for i in range(len(self.population)):
                 equipment_grade = self.population[i]['equipment_grade']
                 self.population[i]['equipment_grade'] = min(equipment_grade, 1.0)
-
+            
             self.epochs += 1
+            if self.epochs % 100 == 0:
+                best_fits.append(deepcopy(self.current_best_fit))
         
         running_time = time() - start 
-        return self.current_best_fit, self.epochs, self.num_states_generated, running_time
+        return self.current_best_fit, best_fits, self.epochs, \
+               self.num_states_generated, running_time
