@@ -68,12 +68,12 @@ if __name__ == '__main__':
     for crossover_operator in crossover_operators:
         args.crossover_operator = crossover_operator
 
-        for i in range(3):
-            args.selection_factor = selection_factors[i]
-            args.branching_factor = branching_factors[i]
+        for mutation_factor in mutation_factors:
+            for mutation_potency in mutation_potencies:
+                for i in range(3):
+                    args.selection_factor = selection_factors[i]
+                    args.branching_factor = branching_factors[i]
 
-            for mutation_factor in mutation_factors:
-                for mutation_potency in mutation_potencies:
                     out += "\n########## Experiment " + str(experiment_id) + " ##########\n"
                     for _ in tqdm(range(100)):
                         op = Optimizer(args)
@@ -124,4 +124,12 @@ if __name__ == '__main__':
                         out += attr + ": " + str(best_results[attr]) + '\n'
                     out += "profit: " + str(max_profit) + '\n'
 
+                    out += "\n########## End" + str(experiment_id) + " ##########\n"
+
                     experiment_id += 1
+
+    output_file.write(out)
+    output_file.close()
+    
+    output_file_path = 'output/' + args.input.split('/')[-1].split('.')[-2] + '.expt.csv'
+    df.to_csv(output_file_path)
