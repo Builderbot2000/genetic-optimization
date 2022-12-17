@@ -71,8 +71,8 @@ class Calculator:
         
         """Calculate market demand"""
         mean = [mean_unit_price, mean_product_quality]
-        cov = [[unit_price_std**2, unit_price_std*product_quality_std],
-               [unit_price_std*product_quality_std, product_quality_std**2]]
+        cov = [[unit_price_std**2, 0.75*unit_price_std*product_quality_std],
+               [0.75*unit_price_std*product_quality_std, product_quality_std**2]]
         lower = [unit_price, -inf]
         upper = [inf, product_quality]
         market_captured, _ = mvnun(lower, upper, mean, cov)
