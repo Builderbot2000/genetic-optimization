@@ -30,7 +30,7 @@ if __name__ == '__main__':
     output_file_path = 'output/' + args.input.split('/')[-1].split('.')[-2] + '.expt.csv'
         
     """Run optimizer with different hyperparameters and write the results to output_file"""
-    crossover_operators = ['ic', 'hc', 'ac', 'sac']
+    crossover_operators = ['ic', 'ac', 'sac']
     selection_factors = [15, 35, 85]
     branching_factors = [68, 12, 2]
     mutation_factors = [0.5, 1.0]
@@ -45,12 +45,13 @@ if __name__ == '__main__':
     args.maximum_epochs = 1000
 
     df = pandas.DataFrame(
-        columns=['crossover_operator', 'selection_factor', 'mutation_factor', \
-                 'mutation_potency', 'maximum_epochs', 'minimum_profit', \
-                 'maximum_profit', 'average_profit', 'running_time']
+        columns=['crossover_operator', 'selection_factor', 'mutation_factor', 'mutation_potency', \
+                 'maximum_epochs', 'num_states_generated', 'running_time', 'minimum_profit', \
+                 'maximum_profit', 'average_profit']
     )
 
-    num_data_points = args.maximum_epochs / 100
+    num_data_points_per_run = int(args.maximum_epochs / 100)
+    num_runs_per_configuration = 10
     experiment_id = 0
 
     for crossover_operator in crossover_operators:
@@ -62,31 +63,31 @@ if __name__ == '__main__':
             for mutation_potency in mutation_potencies:
                 args.mutation_potency = mutation_potency
 
-                for i in range(3):
+                for i in range(len(selection_factors)):
                     args.selection_factor = selection_factors[i]
                     args.branching_factor = branching_factors[i]
 
-                    min_profit = [inf] * 10
-                    max_profit = [-inf] * 10
-                    sum_profit = [0] * 10
+                    min_profit = [inf] * num_data_points_per_run
+                    max_profit = [-inf] * num_data_points_per_run
+                    sum_profit = [0] * num_data_points_per_run
 
-                    num_epochs_run = [None]
-                    num_states_generated = [None]
-                    total_running_time = []
+                    num_epochs_run = [None] * num_data_points_per_run
+                    num_states_generated = [None] * num_data_points_per_run
+                    total_running_time = [0] * num_data_points_per_run
 
-                    for _ in tqdm(range(100)):
+                    for _ in tqdm(range(num_runs_per_configuration)):
                         op = Optimizer(args)
                         if num_states_generated == None:
                             _, _, _, _, results = op.run()
                         else:
                             _, _, _, _, results = op.run()
 
-                        for j in range(10):
-                            total_running_time[j] += results['running_time']
-                            num_states_generated[j] = results['num_states_generated']
-                            num_epochs_run[j] = results['num_epochs']
+                        for j in range(num_data_points_per_run):
+                            total_running_time[j] += results[j]['running_time']
+                            num_states_generated[j] = results[j]['num_states_generated']
+                            num_epochs_run[j] = results[j]['num_epochs']
 
-                            _, profit = calculator.run(results['current_best_fit'],
+                            _, profit = calculator.run(results[j]['current_best_fit'],
                                                        more_details=True)
                             sum_profit[j] += profit
                             if profit > max_profit[j]:
@@ -94,13 +95,15 @@ if __name__ == '__main__':
                             if profit < min_profit[j]:
                                 min_profit[j] = profit
 
-                    """Add row containing 100-run statistics to dataframe"""
-                    for j in range(10):
-                        avg_profit = sum_profit[j] / num_data_points
-                        avg_running_time = total_running_time[j] / num_data_points
+                    """Add row containing statistics of 100 runs to dataframe"""
+                    for j in range(num_data_points_per_run):
+                        avg_profit = sum_profit[j] / num_runs_per_configuration
+                        avg_running_time = total_running_time[j] / num_runs_per_configuration
+
                         df.loc[experiment_id] = [args.crossover_operator, args.selection_factor, \
-                            args.mutation_factor, args.mutation_potency, args.num_epochs[j], \
-                            min_profit, max_profit, avg_profit]
+                            args.mutation_factor, args.mutation_potency, num_epochs_run[j], \
+                            num_states_generated[j], avg_running_time, min_profit[j], \
+                            max_profit[j], avg_profit]
                     
                         experiment_id += 1
 
