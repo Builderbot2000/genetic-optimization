@@ -1,7 +1,6 @@
 from .operators.most_fit_selection import *
 from .operators.arithmetic_crossover import *
 from .operators.single_arithmetic_crossover import *
-from .operators.heuristic_crossover import *
 from .operators.intermediate_crossover import *
 from .operators.random_add_mutation import *
 from .operators.standard_fitness import *
