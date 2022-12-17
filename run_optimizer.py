@@ -3,10 +3,10 @@ from optimizer.calculator import Calculator
 import argparse
 import os
 
-SELECTION_OPERATOR = {'mfs': 'most_fit_selection'}
-CROSSOVER_OPERATOR = {'ic':'intermediate_crossover', 'hc':'heuristic_crossover',
+SEL_OPS = {'mfs': 'most_fit_selection'}
+CROSS_OPS = {'ic':'intermediate_crossover', 'hc':'heuristic_crossover',
                       'ac':'arithmetic_crossover', 'sac':'single_arithmetic_crossover'}
-MUTATION_OPERATOR = {'ram':'random_add_mutation'}
+MUT_OPS = {'ram':'random_add_mutation'}
 
 def parse_instance(input_path):
     input_file = open(input_path, 'r')
@@ -110,19 +110,21 @@ if __name__ == '__main__':
 
     """Retrieve the results of best_fit""" 
     calculator = Calculator(args.instance)
-    details, profit = calculator.run(best_fit, more_details=True)
+    results, profit = calculator.run(best_fit, more_details=True)
 
-    """Write results to output/[instance_name].out.log"""
     if not os.path.exists('output/'):
         os.makedirs('output/')
 
+    """output_file_path: output/[instance_name].out.log"""
     output_file_path = 'output/' + args.input.split('/')[-1].split('.')[-2] + '.out.log'
     output_file = open(output_file_path, 'w')
 
+    """Write instance specifications to output_file"""
     out = "--- Instance Specifications ---" + '\n'
     for attr in args.instance.keys():
         out += attr + ": " + str(args.instance[attr]) + '\n'
     
+    """Write optimizer details to output_file"""
     out += "\n--- Optimizer Details ---\n"
     out += "selection factor: " + str(args.selection_factor) + '\n'
     out += "alpha: " + str(args.alpha) + '\n'
@@ -130,19 +132,21 @@ if __name__ == '__main__':
     out += "mutation_potency: " + str(args.mutation_potency) + '\n'
     out += "minimum_epochs: " + str(args.minimum_epochs) + '\n'
     out += "maximum_epochs: " + str(args.maximum_epochs) + '\n'
-    out += "selection_operator: " + SELECTION_OPERATOR[args.selection_operator] + '\n'
-    out += "crossover_operator: " + CROSSOVER_OPERATOR[args.crossover_operator] + '\n'
-    out += "mutation_operator: " + MUTATION_OPERATOR[args.mutation_operator] + '\n'
+    out += "selection_operator: " + SEL_OPS[args.selection_operator] + '\n'
+    out += "crossover_operator: " + CROSS_OPS[args.crossover_operator] + '\n'
+    out += "mutation_operator: " + MUT_OPS[args.mutation_operator] + '\n'
 
+    """Write best results to output_file"""
     out += "\n--- Final Configurations ---\n"
     for attr in best_fit.keys():
         out += attr + ": " + str(best_fit[attr]) + '\n'
     
     out += "\n--- Final Results ---\n"
-    for attr in details.keys():
-        out += attr + ": " + str(details[attr]) + '\n'
+    for attr in results.keys():
+        out += attr + ": " + str(results[attr]) + '\n'
     out += "profit: " + str(profit) + '\n'
 
+    """Write run's statistics to output_file"""
     out += "\n--- Statistics ---\n"
     out += "num_epochs_run: " + str(num_epochs_run) + '\n'
     out += "num_states_generated: " + str(num_states_generated) + '\n'
