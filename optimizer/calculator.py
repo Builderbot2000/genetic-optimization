@@ -29,6 +29,7 @@ class Calculator:
         unit_price_std = instance['unit_price_std']
         mean_product_quality = instance['mean_product_quality']
         product_quality_std = instance['product_quality_std']
+        price_quality_corr = instance['price_quality_correlation']
         cost_of_resources_per_unit = instance['cost_of_resources_per_unit']
         num_equipments_per_unit = instance['num_equipments_per_unit']
         num_workers_per_unit = instance['num_workers_per_unit']
@@ -71,8 +72,8 @@ class Calculator:
         
         """Calculate market demand"""
         mean = [mean_unit_price, mean_product_quality]
-        cov = [[unit_price_std**2, 0.75*unit_price_std*product_quality_std],
-               [0.75*unit_price_std*product_quality_std, product_quality_std**2]]
+        cov = [[unit_price_std**2, price_quality_corr * unit_price_std * product_quality_std],
+               [price_quality_corr * unit_price_std * product_quality_std, product_quality_std**2]]
         lower = [unit_price, -inf]
         upper = [inf, product_quality]
         market_captured, _ = mvnun(lower, upper, mean, cov)
