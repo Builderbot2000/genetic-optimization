@@ -14,7 +14,7 @@ def experiment1(args):
         os.makedirs('output/')
     
     """Run optimizer with different hyperparameters and write the results to output_file"""
-    crossover_operators = ['hc', 'sac']
+    crossover_operators = ['ic', 'hc', 'sac']
     selection_factors = [15, 35, 85]
     branching_factors = [68, 12, 2]
     mutation_factors = [0.5, 1.0]
@@ -83,10 +83,8 @@ def experiment1(args):
                         avg_profit = sum_profit[j] / num_runs_per_configuration
                         avg_running_time = total_running_time[j] / num_runs_per_configuration
 
-                        df.loc[experiment_id] = [experiment_id, args.crossover_operator, \
-                            args.selection_factor, args.branching_factor, args.mutation_factor, \
-                            args.mutation_potency, num_epochs_run[j], min_profit[j], max_profit[j], \
-                            avg_profit, num_states_generated[j], avg_running_time]
+                        df.loc[experiment_id] = [experiment_id, CROSS_OPS[args.crossover_operator],
+                            SEL_OPS[args.selection_factor], args.branching_factor, MUT_OPS[args.mutation_factor], args.mutation_potency, num_epochs_run[j], min_profit[j], max_profit[j], avg_profit, num_states_generated[j], avg_running_time]
                     
                         experiment_id += 1
 
