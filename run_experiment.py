@@ -27,7 +27,7 @@ if __name__ == '__main__':
         os.makedirs('output/')
     
     """Run optimizer with different hyperparameters and write the results to output_file"""
-    crossover_operators = ['ic', 'ac', 'sac']
+    crossover_operators = ['ic', 'hc', 'sac']
     selection_factors = [15, 35, 85]
     branching_factors = [68, 12, 2]
     mutation_factors = [0.5, 1.0]
