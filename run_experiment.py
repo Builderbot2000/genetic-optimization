@@ -89,7 +89,7 @@ def experiment1(args):
                     
     """output_file_path: output/[instance_name].expt1.log"""
     output_file_path = 'output/' + args.input.split('/')[-1].split('.')[-2] + '.expt1.csv'
-    df.to_csv(output_file_path, index=False)
+    df.to_csv(output_file_path)
 
 
 if __name__ == '__main__':
