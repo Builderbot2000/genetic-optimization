@@ -28,17 +28,18 @@ def experiment1(args):
     args.minimum_epochs = 10
     args.maximum_epochs = 1000
 
+    df = pandas.DataFrame(
+        columns=['crossover_operator', 'selection_factor', 'branching_factor',
+                'mutation_factor', 'mutation_potency', 'maximum_epochs', 
+                'minimum_profit', 'maximum_profit', 'average_profit', 
+                'num_states_generated', 'running_time']
+    )
+
     num_data_points_per_run = int(args.maximum_epochs / 100)
     num_runs_per_configuration = 10
-    experiment_id = 0
 
     for crossover_operator in crossover_operators:
         args.crossover_operator = crossover_operator
-        df = pandas.DataFrame(
-            columns=['experiment_id', 'crossover_operator', 'selection_factor', 'branching_factor',\
-                    'mutation_factor', 'mutation_potency', 'maximum_epochs', 'minimum_profit', \
-                    'maximum_profit', 'average_profit', 'num_states_generated', 'running_time']
-        )
 
         for mutation_factor in mutation_factors:
             args.mutation_factor = mutation_factor
@@ -83,15 +84,12 @@ def experiment1(args):
                         avg_profit = sum_profit[j] / num_runs_per_configuration
                         avg_running_time = total_running_time[j] / num_runs_per_configuration
 
-                        df.loc[experiment_id] = [experiment_id, CROSS_OPS[args.crossover_operator],
+                        df.loc[len(df)] = [CROSS_OPS[args.crossover_operator],
                             SEL_OPS[args.selection_factor], args.branching_factor, MUT_OPS[args.mutation_factor], args.mutation_potency, num_epochs_run[j], min_profit[j], max_profit[j], avg_profit, num_states_generated[j], avg_running_time]
                     
-                        experiment_id += 1
-
-        """output_file_path: output/[instance_name].[crossover_operator_name].log"""
-        output_file_path = 'output/' + args.input.split('/')[-1].split('.')[-2] + '.' + \
-            args['crossover_operator'] + '.csv'
-        df.to_csv(output_file_path, index=False)
+    """output_file_path: output/[instance_name].expt1.log"""
+    output_file_path = 'output/' + args.input.split('/')[-1].split('.')[-2] + '.expt1.csv'
+    df.to_csv(output_file_path, index=False)
 
 
 if __name__ == '__main__':
