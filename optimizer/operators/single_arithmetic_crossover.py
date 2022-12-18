@@ -24,8 +24,8 @@ class SingleArithmeticCrossover(CrossoverOperator):
                 for _ in range(self.optimizer.branching_factor):
                     for attr in parentA:
                         if attr != 'id' and mutated == False:
-                            offspring[attr] = parentB[attr] + \
-                                              alpha * (parentA[attr] - parentB[attr])
+                            offspring[attr] = alpha * parentA[attr] + \
+                                              (1-alpha) * parentB[attr]
                             mutated = True
                         else:
                             offspring[attr] = parentA[attr]

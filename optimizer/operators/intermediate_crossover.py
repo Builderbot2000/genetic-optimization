@@ -9,8 +9,16 @@ class IntermediateCrossover(CrossoverOperator):
         offsprings = []
         for i in range(len(self.optimizer.population)):
             for j in range(i+1, len(self.optimizer.population)):
-                parentA = self.optimizer.population[i]
-                parentB = self.optimizer.population[j]
+                stateA = self.optimizer.population[i]
+                stateB = self.optimizer.population[j]
+                scoreA = self.optimizer.fitness_function.evaluate(stateA)
+                scoreB = self.optimizer.fitness_function.evaluate(stateB)
+                if scoreA >= scoreB:
+                    parentA = stateA
+                    parentB = stateB
+                else:
+                    parentA = stateB
+                    parentB = stateA
                 offspring = {}
                 alpha = self.optimizer.alpha
                 for _ in range(self.optimizer.branching_factor):

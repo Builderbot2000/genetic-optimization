@@ -23,8 +23,8 @@ class ArithmeticCrossover(CrossoverOperator):
                 for _ in range(self.optimizer.branching_factor):
                     for attr in parentA:
                         if attr != 'id':
-                            offspring[attr] = parentB[attr] + \
-                                              alpha * (parentA[attr] - parentB[attr])
+                            offspring[attr] = alpha * parentA[attr] + \
+                                              (1-alpha) * parentB[attr]
                     self.optimizer.state_id_counter += 1
                     offspring['id'] = self.optimizer.state_id_counter
                     offsprings.append(deepcopy(offspring))
