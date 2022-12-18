@@ -15,8 +15,8 @@ def experiment1(args):
     
     """Run optimizer with different hyperparameters and write the results to output_file"""
     crossover_operators = ['ic', 'hc', 'sac']
-    selection_factors = [15, 35, 85]
-    branching_factors = [68, 12, 2]
+    selection_factors = [10, 21, 36]
+    branching_factors = [28, 6, 2]
     mutation_factors = [0.5, 1.0]
     mutation_potencies = [0.4, 0.8]
 
