@@ -26,7 +26,7 @@ def experiment1(args):
     args.termination_check = 'st'
     args.alpha = 0.5
     args.minimum_epochs = 10
-    args.maximum_epochs = 100
+    args.maximum_epochs = 1000
 
     df = pandas.DataFrame(
         columns=['crossover_operator', 'selection_factor', 'branching_factor',
