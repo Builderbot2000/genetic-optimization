@@ -1,4 +1,4 @@
-from run_optimizer import parse_instance, SEL_OPS, CROSS_OPS, MUT_OPS
+from run_optimizer import parse_instance, CROSS_OPS
 from optimizer.optimizer import Optimizer
 from optimizer.optimizer import Calculator
 from numpy import inf
@@ -26,13 +26,13 @@ def experiment1(args):
     args.termination_check = 'st'
     args.alpha = 0.5
     args.minimum_epochs = 10
-    args.maximum_epochs = 1000
+    args.maximum_epochs = 100
 
     df = pandas.DataFrame(
         columns=['crossover_operator', 'selection_factor', 'branching_factor',
                 'mutation_factor', 'mutation_potency', 'maximum_epochs', 
                 'minimum_profit', 'maximum_profit', 'average_profit', 
-                'num_states_generated', 'running_time']
+                'num_states_generated', 'avg_running_time']
     )
 
     num_data_points_per_run = int(args.maximum_epochs / 100)
@@ -85,7 +85,8 @@ def experiment1(args):
                         avg_running_time = total_running_time[j] / num_runs_per_configuration
 
                         df.loc[len(df)] = [CROSS_OPS[args.crossover_operator],
-                            SEL_OPS[args.selection_factor], args.branching_factor, MUT_OPS[args.mutation_factor], args.mutation_potency, num_epochs_run[j], min_profit[j], max_profit[j], avg_profit, num_states_generated[j], avg_running_time]
+                            args.selection_factor, args.branching_factor, args.mutation_factor,
+                            args.mutation_potency, num_epochs_run[j], min_profit[j], max_profit[j], avg_profit, num_states_generated[j], avg_running_time]
                     
     """output_file_path: output/[instance_name].expt1.log"""
     output_file_path = 'output/' + args.input.split('/')[-1].split('.')[-2] + '.expt1.csv'
