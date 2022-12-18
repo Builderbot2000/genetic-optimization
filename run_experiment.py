@@ -7,27 +7,14 @@ import argparse
 import pandas
 import os
 
-if __name__ == '__main__':
-    DEFAULT_INSTANCE = "instances/wafer.log"
-
-    parser = argparse.ArgumentParser(
-      description="Runs genetic optimizer for a set of numerical configurations \
-                   with different sets of hyperparameters"
-    )
-
-    parser.add_argument('--input', type=str, default=DEFAULT_INSTANCE,
-                        help="The path of the input file, defaults to " +
-                              str(DEFAULT_INSTANCE))
-
-    args = parser.parse_args()
-    args.instance = parse_instance(args.input)
+def experiment1(args):
     calculator = Calculator(args.instance)
 
     if not os.path.exists('output/'):
         os.makedirs('output/')
     
     """Run optimizer with different hyperparameters and write the results to output_file"""
-    crossover_operators = ['ic', 'hc', 'sac']
+    crossover_operators = ['hc', 'sac']
     selection_factors = [15, 35, 85]
     branching_factors = [68, 12, 2]
     mutation_factors = [0.5, 1.0]
@@ -107,3 +94,24 @@ if __name__ == '__main__':
         output_file_path = 'output/' + args.input.split('/')[-1].split('.')[-2] + '.' + \
             args['crossover_operator'] + '.csv'
         df.to_csv(output_file_path, index=False)
+
+
+if __name__ == '__main__':
+    DEFAULT_INSTANCE = "instances/wafer.log"
+    DEFAULT_EXPERIMENT = 1
+
+    parser = argparse.ArgumentParser(
+      description="Runs genetic optimizer for a set of numerical configurations \
+                   with different sets of hyperparameters"
+    )
+
+    parser.add_argument('--input', type=str, default=DEFAULT_INSTANCE,
+                        help="The path of the input file, defaults to " +
+                              str(DEFAULT_INSTANCE))
+
+    parser.add_argument('--experiment', type=str, default=DEFAULT_INSTANCE)
+
+    args = parser.parse_args()
+    args.instance = parse_instance(args.input)
+    if args.experiment == 1:
+        experiment1(args)
