@@ -37,7 +37,7 @@ class Calculator:
         wage_of_best_workers = instance['wage_of_best_workers']
         logistics_cost_per_unit = instance['logistics_cost_per_unit']
         cost_of_best_contractors = instance['cost_of_best_contractors']
-        cost_of_best_facility_designers = instance['cost_of_best_facility_designers']
+        cost_of_best_architects = instance['cost_of_best_architects']
         full_coverage_marketing_cost = instance['full_coverage_marketing_cost']
         max_product_improvement = instance['max_product_improvement']
         RaD_cost_for_max_improvement = instance['RaD_cost_for_max_improvement']
@@ -51,7 +51,7 @@ class Calculator:
         product_improvement = max(min(RaD_spending / RaD_cost_for_max_improvement, 1.0) * 
                                   max_product_improvement, 1.0)
         product_quality = product_improvement * min(equipment_grade, 1.0) * workforce_skill_level
-        facility_efficiency = min(1.0, (design_spending / cost_of_best_facility_designers) * \
+        facility_efficiency = min(1.0, (design_spending / cost_of_best_architects) * \
                                        (construction_spending / cost_of_best_contractors))
         
         """Number of products to be manufactured"""

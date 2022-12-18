@@ -10,7 +10,7 @@ num_workers_per_unit 0.01
 cost_of_best_equipments 160000000
 wage_of_best_workers 80000
 logistics_cost_per_unit 6000
-cost_of_best_facility_designers 20000000
+cost_of_best_architects 20000000
 cost_of_best_contractors 4000000000
 full_coverage_marketing_cost 30000000
 max_product_improvement 2.0

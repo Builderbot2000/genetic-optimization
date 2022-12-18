@@ -26,11 +26,8 @@ if __name__ == '__main__':
     if not os.path.exists('output/'):
         os.makedirs('output/')
     
-    """output_file_path: output/[instance_name].expt.csv"""
-    output_file_path = 'output/' + args.input.split('/')[-1].split('.')[-2] + '.expt.csv'
-        
     """Run optimizer with different hyperparameters and write the results to output_file"""
-    crossover_operators = ['ac', 'sac', 'ic']
+    crossover_operators = ['sac', 'ic']
     selection_factors = [15, 35, 85]
     branching_factors = [68, 12, 2]
     mutation_factors = [0.5, 1.0]
@@ -44,18 +41,17 @@ if __name__ == '__main__':
     args.minimum_epochs = 10
     args.maximum_epochs = 1000
 
-    df = pandas.DataFrame(
-        columns=['experiment_id', 'crossover_operator', 'selection_factor', 'branching_factor',\
-                 'mutation_factor', 'mutation_potency', 'maximum_epochs', 'minimum_profit', \
-                 'maximum_profit', 'average_profit', 'num_states_generated', 'running_time']
-    )
-
     num_data_points_per_run = int(args.maximum_epochs / 100)
     num_runs_per_configuration = 10
     experiment_id = 0
 
     for crossover_operator in crossover_operators:
         args.crossover_operator = crossover_operator
+        df = pandas.DataFrame(
+            columns=['experiment_id', 'crossover_operator', 'selection_factor', 'branching_factor',\
+                    'mutation_factor', 'mutation_potency', 'maximum_epochs', 'minimum_profit', \
+                    'maximum_profit', 'average_profit', 'num_states_generated', 'running_time']
+        )
 
         for mutation_factor in mutation_factors:
             args.mutation_factor = mutation_factor
@@ -107,4 +103,7 @@ if __name__ == '__main__':
                     
                         experiment_id += 1
 
+        """output_file_path: output/[instance_name].[crossover_operator_name].log"""
+        output_file_path = 'output/' + args.input.split('/')[-1].split('.')[-2] + '.' + \
+            args['crossover_operator'] + '.csv'
         df.to_csv(output_file_path, index=False)

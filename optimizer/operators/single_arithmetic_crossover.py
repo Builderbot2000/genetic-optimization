@@ -27,6 +27,8 @@ class SingleArithmeticCrossover(CrossoverOperator):
                             offspring[attr] = parentB[attr] + \
                                               alpha * (parentA[attr] - parentB[attr])
                             mutated = True
+                        else:
+                            offspring[attr] = parentA[attr]
                     self.optimizer.state_id_counter += 1
                     offspring['id'] = self.optimizer.state_id_counter
                     offsprings.append(deepcopy(offspring))

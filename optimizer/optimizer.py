@@ -84,7 +84,7 @@ class Optimizer:
         state['worker_wage'] = instance['wage_of_best_workers']
         state['marketing_budget'] = instance['full_coverage_marketing_cost']
         state['RaD_spending'] = instance['RaD_cost_for_max_improvement']
-        state['design_spending'] = instance['cost_of_best_facility_designers']
+        state['design_spending'] = instance['cost_of_best_architects']
         state['construction_spending'] = instance['cost_of_best_contractors']
 
         self.population.append(state)
