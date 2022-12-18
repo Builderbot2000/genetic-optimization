@@ -107,7 +107,7 @@ if __name__ == '__main__':
                         help="The path of the input file, defaults to " +
                               str(DEFAULT_INSTANCE))
 
-    parser.add_argument('--experiment', type=str, default=DEFAULT_INSTANCE)
+    parser.add_argument('--experiment', type=str, default=DEFAULT_EXPERIMENT)
 
     args = parser.parse_args()
     args.instance = parse_instance(args.input)
