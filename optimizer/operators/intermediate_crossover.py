@@ -25,8 +25,8 @@ class IntermediateCrossover(CrossoverOperator):
                     for attr in parentA:
                         if attr != 'id':
                             rand = random.uniform(0, 1)
-                            offspring[attr] = parentA[attr] + \
-                                              alpha * rand * (parentB[attr] - parentA[attr])
+                            offspring[attr] = parentB[attr] + \
+                                              alpha * rand * (parentA[attr] - parentB[attr])
                     self.optimizer.state_id_counter += 1
                     offspring['id'] = self.optimizer.state_id_counter
                     offsprings.append(deepcopy(offspring))

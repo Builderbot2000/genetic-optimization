@@ -20,8 +20,8 @@ class SingleArithmeticCrossover(CrossoverOperator):
                     parentB = stateA
                 offspring = {}
                 alpha = self.optimizer.alpha
-                mutated = False
                 for _ in range(self.optimizer.branching_factor):
+                    mutated = False
                     for attr in parentA:
                         if attr != 'id' and mutated == False:
                             offspring[attr] = alpha * parentA[attr] + \
