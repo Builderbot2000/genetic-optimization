@@ -83,7 +83,7 @@ if __name__ == '__main__':
                         help='How many child states are produced by two parents, defaults to ' + 
                         str(DEFAULT_BRANCHING_FACTOR))  
 
-    parser.add_argument('--alpha', type=int, default=DEFAULT_ALPHA,
+    parser.add_argument('--alpha', type=float, default=DEFAULT_ALPHA,
                         help="Value of the alpha parameter used in crossover operators, \
                               defaults to " + str(DEFAULT_ALPHA))  
 
@@ -113,6 +113,7 @@ if __name__ == '__main__':
     """Retrieve the results of best_fit""" 
     calculator = Calculator(args.instance)
     results, profit = calculator.run(best_fit, more_details=True)
+    assert(profit == best_fit['profit'])
 
     if not os.path.exists('output/'):
         os.makedirs('output/')
@@ -146,7 +147,7 @@ if __name__ == '__main__':
     out += "\n--- Final Results ---\n"
     for attr in results.keys():
         out += attr + ": " + str(results[attr]) + '\n'
-    out += "profit: " + str(profit) + '\n'
+    out += "profit: " + str(best_fit['profit']) + '\n'
 
     """Write run's statistics to output_file"""
     out += "\n--- Statistics ---\n"

@@ -1,4 +1,5 @@
 from .BaseClasses.base_operator import CrossoverOperator
+from random import randint
 from copy import deepcopy
 
 class SingleArithmeticCrossover(CrossoverOperator):
@@ -10,9 +11,7 @@ class SingleArithmeticCrossover(CrossoverOperator):
             for j in range(i+1, len(self.optimizer.population)):
                 stateA = self.optimizer.population[i]
                 stateB = self.optimizer.population[j]
-                scoreA = self.optimizer.fitness_function.evaluate(stateA)
-                scoreB = self.optimizer.fitness_function.evaluate(stateB)
-                if scoreA >= scoreB:
+                if stateA['profit'] >= stateB['profit']:
                     parentA = stateA
                     parentB = stateB
                 else:
@@ -20,15 +19,19 @@ class SingleArithmeticCrossover(CrossoverOperator):
                     parentB = stateA
                 offspring = {}
                 alpha = self.optimizer.alpha
+                if alpha > 1:
+                    exit("arithmetic_crossover does not allow alpha > 1")
+                attrs = []
+                for attr in parentA:
+                    if attr != 'id' and attr != 'profit':
+                        attrs.append(attr)
                 for _ in range(self.optimizer.branching_factor):
-                    mutated = False
                     for attr in parentA:
-                        if attr != 'id' and mutated == False:
-                            offspring[attr] = alpha * parentA[attr] + \
-                                              (1-alpha) * parentB[attr]
-                            mutated = True
-                        else:
+                        if attr != 'id' and attr != 'profit':
                             offspring[attr] = parentA[attr]
+                    mut_attr = attrs[randint(0, len(attrs)-1)]
+                    offspring[mut_attr] = parentB[mut_attr] + \
+                                          alpha * (parentA[mut_attr] - parentB[mut_attr])
                     self.optimizer.state_id_counter += 1
                     offspring['id'] = self.optimizer.state_id_counter
                     offsprings.append(deepcopy(offspring))

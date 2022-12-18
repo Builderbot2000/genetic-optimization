@@ -1,5 +1,4 @@
 from .BaseClasses.base_operator import SelectionOperator
-from copy import deepcopy
 
 class MostFitSelection(SelectionOperator):
     def run(self) -> list:
@@ -9,15 +8,16 @@ class MostFitSelection(SelectionOperator):
         can be considered according to given priority
         """
 
-        scores = {}
+        population = []
         for state in self.optimizer.population:
-            scores[state['id']] = self.optimizer.fitness_function.evaluate(state)
-        self.optimizer.population.sort(key=lambda state: scores[state['id']], reverse=True)
+            state['profit'] = self.optimizer.fitness_function.evaluate(state)
+            population.append(state)
+        population.sort(key=lambda state: state['profit'], reverse=True)
 
-        best_state = self.optimizer.population[0]
-        best_score = scores[best_state['id']]
-        if best_score > self.optimizer.current_best_score:
-            self.optimizer.current_best_fit = deepcopy(best_state)
-            self.optimizer.current_best_score = best_score
+        best_state = population[0]
+        if self.optimizer.current_best_fit == None:
+            self.optimizer.current_best_fit = best_state
+        elif best_state['profit'] > self.optimizer.current_best_fit['profit']:
+            self.optimizer.current_best_fit = best_state
             
-        return self.optimizer.population[:self.optimizer.selection_factor]
+        return population[:self.optimizer.selection_factor]

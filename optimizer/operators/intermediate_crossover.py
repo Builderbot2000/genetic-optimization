@@ -11,9 +11,7 @@ class IntermediateCrossover(CrossoverOperator):
             for j in range(i+1, len(self.optimizer.population)):
                 stateA = self.optimizer.population[i]
                 stateB = self.optimizer.population[j]
-                scoreA = self.optimizer.fitness_function.evaluate(stateA)
-                scoreB = self.optimizer.fitness_function.evaluate(stateB)
-                if scoreA >= scoreB:
+                if stateA['profit'] >= stateB['profit']:
                     parentA = stateA
                     parentB = stateB
                 else:
@@ -23,10 +21,12 @@ class IntermediateCrossover(CrossoverOperator):
                 alpha = self.optimizer.alpha
                 for _ in range(self.optimizer.branching_factor):
                     for attr in parentA:
-                        if attr != 'id':
+                        if attr != 'id' and attr != 'profit':
                             rand = random.uniform(0, 1)
-                            offspring[attr] = parentB[attr] + \
-                                              alpha * rand * (parentA[attr] - parentB[attr])
+                            offspring[attr] = parentA[attr] + \
+                                              alpha * rand * (parentB[attr] - parentA[attr])
+                            if offspring[attr] < 0:
+                                offspring[attr] = parentA[attr]
                     self.optimizer.state_id_counter += 1
                     offspring['id'] = self.optimizer.state_id_counter
                     offsprings.append(deepcopy(offspring))

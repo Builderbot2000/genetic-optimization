@@ -7,7 +7,7 @@ class RandomAddMutation(MutationOperator):
         
         for state in self.optimizer.population:
             for attr in state:
-                if attr != 'id':
+                if attr != 'id' and attr != 'profit':
                     if random.random() <= self.optimizer.mutation_factor:
                         potency = self.optimizer.mutation_potency
                         range = state[attr] * potency

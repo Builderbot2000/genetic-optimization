@@ -95,24 +95,38 @@ class Optimizer:
         Run the genetic algorithm with the given parameters on current population and 
         output to path specified by output_path
         """
+        detailed_results = []
         
         """Initialize Population"""
-        n = self.selection_factor
-        for i in range(1, n*(n-1)*self.branching_factor):
+        for i in range(1, self.selection_factor):
             clone = deepcopy(self.population[0])
             clone['id'] = i
             self.population.append(clone)
             self.state_id_counter = i
+
+        start = time()
+
         self.population = self.mutation_operator.run()
         self.num_states_generated += len(self.population)
 
-        more_detailed_results = []
-        start = time()
-
-        while (not self.terminate or self.epochs < self.minimum_epochs) \
-                and self.epochs < self.maximum_epochs:
+        while (True):
             """Selection Phase"""
             self.population = self.selection_operator.run()
+
+            running_time = time() - start
+
+            if self.epochs % 100 == 0:
+                detailed_results.append(
+                    {'current_best_fit': self.current_best_fit,
+                     'num_states_generated': self.num_states_generated,
+                     'num_epochs': self.epochs,
+                     'running_time': running_time}
+                )
+                
+            self.epochs += 1
+            if (self.terminate or self.epochs == self.maximum_epochs) and \
+                self.epochs > self.minimum_epochs: \
+                break
 
             """Crossover Phase"""
             self.population = self.crossover_operator.run()
@@ -125,17 +139,7 @@ class Optimizer:
             for i in range(len(self.population)):
                 equipment_grade = self.population[i]['equipment_grade']
                 self.population[i]['equipment_grade'] = min(equipment_grade, 1.0)
-            
-            self.epochs += 1
-            running_time = time() - start
 
-            if self.epochs % 100 == 0:
-                more_detailed_results.append(
-                    {'current_best_fit': deepcopy(self.current_best_fit),
-                     'num_states_generated': self.num_states_generated,
-                     'num_epochs': self.epochs,
-                     'running_time': running_time}
-                )
         
         return self.current_best_fit, self.epochs, self.num_states_generated, \
-               running_time, more_detailed_results
+               running_time, detailed_results

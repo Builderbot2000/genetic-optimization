@@ -3,8 +3,8 @@ from optimizer.optimizer import Optimizer
 from optimizer.optimizer import Calculator
 from numpy import inf
 from tqdm import tqdm
+import pandas as pd
 import argparse
-import pandas
 import os
 
 def experiment1(args):
@@ -28,18 +28,18 @@ def experiment1(args):
     args.minimum_epochs = 10
     args.maximum_epochs = 1000
 
-    df = pandas.DataFrame(
-        columns=['crossover_operator', 'selection_factor', 'branching_factor',
-                'mutation_factor', 'mutation_potency', 'maximum_epochs', 
-                'minimum_profit', 'maximum_profit', 'average_profit', 
-                'num_states_generated', 'avg_running_time']
-    )
-
     num_data_points_per_run = int(args.maximum_epochs / 100)
     num_runs_per_configuration = 10
 
     for crossover_operator in crossover_operators:
         args.crossover_operator = crossover_operator
+
+        df = pd.DataFrame(
+            columns=['crossover_operator', 'selection_factor', 'branching_factor',
+                     'mutation_factor', 'mutation_potency', 'maximum_epochs', 
+                     'minimum_profit', 'maximum_profit', 'average_profit', 
+                     'num_states_generated', 'avg_running_time']
+        )
 
         for mutation_factor in mutation_factors:
             args.mutation_factor = mutation_factor
@@ -71,8 +71,8 @@ def experiment1(args):
                             num_states_generated[j] = results[j]['num_states_generated']
                             num_epochs_run[j] = results[j]['num_epochs']
 
-                            _, profit = calculator.run(results[j]['current_best_fit'],
-                                                       more_details=True)
+                            profit = results[j]['current_best_fit']['profit']
+
                             sum_profit[j] += profit
                             if profit > max_profit[j]:
                                 max_profit[j] = profit
@@ -88,9 +88,10 @@ def experiment1(args):
                             args.selection_factor, args.branching_factor, args.mutation_factor,
                             args.mutation_potency, num_epochs_run[j], min_profit[j], max_profit[j], avg_profit, num_states_generated[j], avg_running_time]
                     
-    """output_file_path: output/[instance_name].expt1.log"""
-    output_file_path = 'output/' + args.input.split('/')[-1].split('.')[-2] + '.expt1.csv'
-    df.to_csv(output_file_path)
+        """output_file_path: output/[instance_name].expt1.log"""
+        output_file_path = 'output/' + args.input.split('/')[-1].split('.')[-2] + '.expt1.' + \
+            args.crossover_operator + '.csv'
+        df.to_csv(output_file_path)
 
 
 if __name__ == '__main__':
