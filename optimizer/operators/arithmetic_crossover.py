@@ -17,11 +17,11 @@ class ArithmeticCrossover(CrossoverOperator):
                 else:
                     parentA = stateB
                     parentB = stateA
-                offspring = {}
                 alpha = self.optimizer.alpha
                 if alpha > 1:
                     exit("arithmetic_crossover does not allow alpha > 1")
                 for _ in range(self.optimizer.branching_factor):
+                    offspring = {}
                     for attr in parentA:
                         if attr != 'id' and attr != 'profit':
                             offspring[attr] = parentB[attr] + \

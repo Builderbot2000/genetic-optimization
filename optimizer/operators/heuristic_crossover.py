@@ -16,9 +16,9 @@ class HeuristicCrossover(CrossoverOperator):
                 else:
                     parentA = stateB
                     parentB = stateA
-                offspring = {}
                 alpha = self.optimizer.alpha
                 for _ in range(self.optimizer.branching_factor):
+                    offspring = {}
                     for attr in parentA:
                         if attr != 'id' and attr != 'profit':
                             offspring[attr] = parentB[attr] + \

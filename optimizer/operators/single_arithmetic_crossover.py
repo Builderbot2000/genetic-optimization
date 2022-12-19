@@ -17,7 +17,6 @@ class SingleArithmeticCrossover(CrossoverOperator):
                 else:
                     parentA = stateB
                     parentB = stateA
-                offspring = {}
                 alpha = self.optimizer.alpha
                 if alpha > 1:
                     exit("arithmetic_crossover does not allow alpha > 1")
@@ -25,14 +24,22 @@ class SingleArithmeticCrossover(CrossoverOperator):
                 for attr in parentA:
                     if attr != 'id' and attr != 'profit':
                         attrs.append(attr)
-                for _ in range(self.optimizer.branching_factor):
+                for _ in range(int(self.optimizer.branching_factor/2)):
+                    offspring1 = {}
+                    offspring2 = {}
                     for attr in parentA:
                         if attr != 'id' and attr != 'profit':
-                            offspring[attr] = parentA[attr]
+                            offspring1[attr] = parentA[attr]
+                            offspring2[attr] = parentA[attr]
                     mut_attr = attrs[randint(0, len(attrs)-1)]
-                    offspring[mut_attr] = parentB[mut_attr] + \
+                    offspring1[mut_attr] = parentB[mut_attr] + \
                                           alpha * (parentA[mut_attr] - parentB[mut_attr])
+                    offspring1[mut_attr] = parentA[mut_attr] + \
+                                          alpha * (parentB[mut_attr] - parentA[mut_attr])
                     self.optimizer.state_id_counter += 1
-                    offspring['id'] = self.optimizer.state_id_counter
-                    offsprings.append(deepcopy(offspring))
+                    offspring1['id'] = self.optimizer.state_id_counter
+                    self.optimizer.state_id_counter += 1
+                    offspring2['id'] = self.optimizer.state_id_counter
+                    offsprings.append(deepcopy(offspring1))
+                    offsprings.append(deepcopy(offspring2))
         return offsprings

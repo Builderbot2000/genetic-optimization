@@ -4,3 +4,4 @@ __pycache__
 .ipynb_checkpoints
 output/*.out.log
 output/*.csv
+graph.py

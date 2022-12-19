@@ -8,7 +8,7 @@ import argparse
 import os
 
 if __name__ == '__main__':
-    random.seed(40)
+    random.seed(41)
     DEFAULT_INSTANCE = "instances/wafer.log"
 
     parser = argparse.ArgumentParser(
@@ -49,9 +49,9 @@ if __name__ == '__main__':
     # branching_factors = [28, 6, 2]
     # mutation_factors = [0.5, 1.0]
 
-    args.selection_factor = 36
-    args.crossover_operator = 'ic'
-    args.branching_factor = 2
+    args.selection_factor = 10
+    args.crossover_operator = 'sac'
+    args.branching_factor = 28
     args.mutation_factor = 0.5
     args.mutation_potency = 0.4
 

@@ -17,9 +17,9 @@ class IntermediateCrossover(CrossoverOperator):
                 else:
                     parentA = stateB
                     parentB = stateA
-                offspring = {}
                 alpha = self.optimizer.alpha
                 for _ in range(self.optimizer.branching_factor):
+                    offspring = {}
                     for attr in parentA:
                         if attr != 'id' and attr != 'profit':
                             rand = random.uniform(0, 1)
