@@ -8,6 +8,7 @@ import standard_termination
 
 DEFAULT_EXPERIMENT_ID = "box 42"
 DEFAULT_OBJECTIVE = "profit"
+DEFAULT_OBJECTIVE_VAL = 1000000
 DEFAULT_INSTANCE = "code/instances/example_instance.txt"
 DEFAULT_MODIFIERS = "code/modifiers/example_modifiers.txt"
 DEFAULT_OUTPUT = "code/output/output.txt"
@@ -37,6 +38,8 @@ if __name__ == '__main__':
                         help='The unique identifier for this experiment, defaults to ' + str(DEFAULT_EXPERIMENT_ID))
     parser.add_argument('--objective', type=str, default=DEFAULT_OBJECTIVE,
                         help='The unique identifier for this experiment, defaults to ' + str(DEFAULT_OBJECTIVE))
+    parser.add_argument('--objective_val', type=str, default=DEFAULT_OBJECTIVE_VAL,
+                        help='The terminating value for the objective, defaults to ' + str(DEFAULT_OBJECTIVE_VAL))
     parser.add_argument('--input', type=str, default=DEFAULT_INSTANCE,
                         help='The name of the input file, defaults to ' + str(DEFAULT_INSTANCE))
     parser.add_argument('--modifiers', type=str, default=DEFAULT_MODIFIERS,
