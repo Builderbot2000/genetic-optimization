@@ -107,7 +107,12 @@ class Optimizer:
         start = time()
 
         self.population = self.mutation_operator.run()
+        self.population = self.selection_operator.run()
+
+        self.population = self.crossover_operator.run()
         self.num_states_generated += len(self.population)
+        
+        self.population = self.mutation_operator.run()
 
         while (True):
             """Selection Phase"""
@@ -115,6 +120,7 @@ class Optimizer:
 
             running_time = time() - start
 
+            self.epochs += 1
             if self.epochs % 100 == 0:
                 detailed_results.append(
                     {'current_best_fit': self.current_best_fit,
@@ -123,7 +129,6 @@ class Optimizer:
                      'running_time': running_time}
                 )
                 
-            self.epochs += 1
             if (self.terminate or self.epochs == self.maximum_epochs) and \
                 self.epochs > self.minimum_epochs: \
                 break
