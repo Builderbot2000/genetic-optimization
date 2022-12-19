@@ -49,10 +49,10 @@ if __name__ == '__main__':
     # branching_factors = [28, 6, 2]
     # mutation_factors = [0.5, 1.0]
 
-    args.selection_factor = 10
+    args.selection_factor = 36
     args.crossover_operator = 'sac'
-    args.branching_factor = 28
-    args.mutation_factor = 0.5
+    args.branching_factor = 2
+    args.mutation_factor = 1.0
     args.mutation_potency = 0.4
 
     min_profit = [inf] * num_data_points_per_run
