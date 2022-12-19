@@ -9,14 +9,8 @@ class SingleArithmeticCrossover(CrossoverOperator):
         offsprings = []
         for i in range(len(self.optimizer.population)):
             for j in range(i+1, len(self.optimizer.population)):
-                stateA = self.optimizer.population[i]
-                stateB = self.optimizer.population[j]
-                if stateA['profit'] >= stateB['profit']:
-                    parentA = stateA
-                    parentB = stateB
-                else:
-                    parentA = stateB
-                    parentB = stateA
+                parentA = self.optimizer.population[i]
+                parentB = self.optimizer.population[j]
                 alpha = self.optimizer.alpha
                 if alpha > 1:
                     exit("arithmetic_crossover does not allow alpha > 1")
