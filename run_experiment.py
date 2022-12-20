@@ -8,8 +8,12 @@ import argparse
 import os
 
 if __name__ == '__main__':
-    random.seed(41)
     DEFAULT_INSTANCE = "instances/wafer.log"
+    DEFAULT_CROSSOVER_OPERATOR = 'ic'
+    DEFAULT_SELECTION_FACTOR = 10
+    DEFAULT_BRANCHING_FACTOR = 28
+    DEFAULT_MUTATION_FACTOR = 0.5
+    DEFAULT_RANDOM_SEED = 41
 
     parser = argparse.ArgumentParser(
       description="Runs genetic optimizer for a set of numerical configurations \
@@ -19,9 +23,30 @@ if __name__ == '__main__':
     parser.add_argument('--input', type=str, default=DEFAULT_INSTANCE,
                         help="The path of the input file, defaults to " +
                               str(DEFAULT_INSTANCE))
+                              
+    parser.add_argument('--crossover_operator', type=str, default=DEFAULT_CROSSOVER_OPERATOR,
+                        help='The crossover operator to use, defaults to ' + 
+                              str(DEFAULT_CROSSOVER_OPERATOR))
+
+    parser.add_argument('--selection_factor', type=int, default=DEFAULT_SELECTION_FACTOR,
+                        help="How many states to select from top k most fitting states, \
+                              defaults to " + str(DEFAULT_SELECTION_FACTOR))    
+
+    parser.add_argument('--branching_factor', type=int, default=DEFAULT_BRANCHING_FACTOR,
+                        help='How many child states are produced by two parents, defaults to ' + 
+                        str(DEFAULT_BRANCHING_FACTOR))
+
+    parser.add_argument('--mutation_factor', type=float, default=DEFAULT_MUTATION_FACTOR,
+                        help="How likely a state attribute is mutated, defaults to " + 
+                              str(DEFAULT_MUTATION_FACTOR))  
+
+    parser.add_argument('--random_seed', type=float, default=DEFAULT_RANDOM_SEED,
+                        help="random seed, defaults to " + str(DEFAULT_RANDOM_SEED))  
 
     args = parser.parse_args()
     args.instance = parse_instance(args.input)
+
+    random.seed(args.random_seed)
 
     if not os.path.exists('output/'):
         os.makedirs('output/')
@@ -33,6 +58,7 @@ if __name__ == '__main__':
     args.alpha = 0.5
     args.minimum_epochs = 10
     args.maximum_epochs = 1000
+    args.mutation_potency = 0.4
 
     num_data_points_per_run = int(args.maximum_epochs / 100)
     num_runs_per_configuration = 10
@@ -43,17 +69,6 @@ if __name__ == '__main__':
                      'minimum_profit', 'maximum_profit', 'average_profit', 
                      'num_states_generated', 'avg_running_time']
     )
-
-    # crossover_operators = ['ic', 'hc', 'sac']
-    # selection_factors = [10, 21, 36]
-    # branching_factors = [28, 6, 2]
-    # mutation_factors = [0.5, 1.0]
-
-    args.selection_factor = 36
-    args.crossover_operator = 'sac'
-    args.branching_factor = 2
-    args.mutation_factor = 1.0
-    args.mutation_potency = 0.4
 
     min_profit = [inf] * num_data_points_per_run
     max_profit = [-inf] * num_data_points_per_run
