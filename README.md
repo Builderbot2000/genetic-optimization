@@ -21,8 +21,8 @@ The results will be in output/\[instance_name\].out.log.
 
 ### Running the experiments
 Our experiment results are available in output/wafer.expt.csv. \
-To check any of these results, you need to open output/wafer.expt.csv in Excel or program where csv files are viewable. Then find a set of crossover_operator, selection_factor, branching_factor, mutation_factor, and random_seed you want to run. The results will span 10 rows (score every 100 epochs) \
-Please substitute the name of crossover operator by their shorthand: {'intermediate_crossover': 'ic', 'heuristic_crossover': 'hc', 'single_arithmetic_crossover': 'sac'}
+To check any of these results, you need to open output/wafer.expt.csv in Excel or program where csv files are viewable. Then find a set of crossover_operator, selection_factor, branching_factor, mutation_factor, and random_seed you want to run. The results will span 10 rows (score every 100 epochs).
 ```
 python run_experiment.py --crossover_operator CROSSOVER_OPERATOR --selection_factor SELECTION_FACTOR --branching_factor BRANCHING_FACTOR --mutation_factor MUTATION_FACTOR --random_seed RANDOM_SEED
 ```
+Please substitute the name of crossover operator by their shorthand: {'intermediate_crossover': 'ic', 'heuristic_crossover': 'hc', 'single_arithmetic_crossover': 'sac'}.
